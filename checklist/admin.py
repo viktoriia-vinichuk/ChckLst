@@ -20,6 +20,7 @@ admin.site.register(B_Genre, HideModelAdmin)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order','title', 'display_author','display_genre')
     list_display_links = ('order','title')
+    filter_horizontal = ('author','genre')
 
 class BookInline(admin.TabularInline):
     model = Book
@@ -39,6 +40,7 @@ admin.site.register(M_Genre, HideModelAdmin)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order','title', 'year','display_genre')
     list_display_links = ('order','title')
+    filter_horizontal = ('genre',)
 
 class MovieInline(admin.TabularInline):
     model = Movie
@@ -58,6 +60,7 @@ admin.site.register(F_Kind, HideModelAdmin)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order','name','display_kind')
     list_display_links = ('order','name')
+    filter_horizontal = ('food_kinds',)
 
 class FoodInline(admin.TabularInline):
     model = Food
@@ -77,6 +80,7 @@ admin.site.register(D_kind, HideModelAdmin)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order','name','alcohol','display_kind')
     list_display_links = ('order','name')
+    filter_horizontal = ('drink_kinds',)
 
 class DrinkInline(admin.TabularInline):
     model = Drink
@@ -95,6 +99,7 @@ class ChoicesInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Choices'
     fk_name = 'user'
+    filter_horizontal = ('books','movies','food','drinks')
 
 class CustomUserAdmin(UserAdmin):
     inlines = (ChoicesInline, )

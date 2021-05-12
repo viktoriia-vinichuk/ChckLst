@@ -132,4 +132,4 @@ class Choice(models.Model):
    drinks = models.ManyToManyField(Drink, blank=True)
    
    def __str__(self):
-      return ''
+      return 'User_choice'

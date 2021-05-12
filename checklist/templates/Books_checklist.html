@@ -55,29 +55,26 @@
             <div class="u-expanded-width u-list u-repeater u-list-1">
                 {% for book in book_list %}
                     <div class="u-align-left u-container-style u-list-item u-repeater-item">
-                        <div class="u-container-layout u-similar-container u-container-layout-1 book-click chcklist-el" data-book={{ book.id }} style="cursor:pointer;">
-                            {% is_read book user as is_book_read_by_user %}
-                            {% if is_book_read_by_user %}
-                                <span class="u-icon u-icon-circle u-text-black u-icon-1 book-read">
-                                    <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512 512" style="">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-766d"></use>
-                                    </svg>
-                                    <svg class="u-svg-content" viewBox="0 0 512 512" id="svg-766d">
-                                        <path d="m452 512h-392c-33.085938 0-60-26.914062-60-60v-392c0-33.085938 26.914062-60 60-60h392c33.085938 0 60 26.914062 60 60v392c0 33.085938-26.914062 60-60 60zm-392-472c-11.027344 0-20 8.972656-20 20v392c0 11.027344 8.972656 20 20 20h392c11.027344 0 20-8.972656 20-20v-392c0-11.027344-8.972656-20-20-20zm370.898438 111.34375-29.800782-26.6875-184.964844 206.566406-107.351562-102.046875-27.558594 28.988281 137.21875 130.445313zm0 0"></path>
-                                    </svg>
-                                </span>
-                            {% else %}
-                                <span class="u-icon u-icon-circle u-icon-3 book-unread">
-                                    <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512 512" style="">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-20e6"></use>
-                                    </svg>
-                                    <svg class="u-svg-content" viewBox="0 0 512 512" x="0px" y="0px" id="svg-20e6" style="enable-background:new 0 0 512 512;">
-                                        <g><g>
-                                            <path d="M432,0H80C35.888,0,0,35.888,0,80v352c0,44.112,35.888,80,80,80h352c44.112,0,80-35.888,80-80V80    C512,35.888,476.112,0,432,0z M472,432c0,22.056-17.944,40-40,40H80c-22.056,0-40-17.944-40-40V80c0-22.056,17.944-40,40-40h352    c22.056,0,40,17.944,40,40V432z"></path>
-                                        </g></g>
-                                    </svg>
-                                </span>
-                            {% endif %} 
+                        {% is_read book user as is_book_read_by_user %}
+                        <div class="u-container-layout u-similar-container u-container-layout-1 book-click chcklist-el" data-read={{ is_book_read_by_user }} data-book={{ book.id }} style="cursor:pointer;">
+                            <span class="u-icon u-icon-circle u-text-black u-icon-1 book-read" {% if not is_book_read_by_user %} style="display:none" {% endif %}>
+                                <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512 512" style="">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-766d"></use>
+                                </svg>
+                                <svg class="u-svg-content" viewBox="0 0 512 512" id="svg-766d">
+                                    <path d="m452 512h-392c-33.085938 0-60-26.914062-60-60v-392c0-33.085938 26.914062-60 60-60h392c33.085938 0 60 26.914062 60 60v392c0 33.085938-26.914062 60-60 60zm-392-472c-11.027344 0-20 8.972656-20 20v392c0 11.027344 8.972656 20 20 20h392c11.027344 0 20-8.972656 20-20v-392c0-11.027344-8.972656-20-20-20zm370.898438 111.34375-29.800782-26.6875-184.964844 206.566406-107.351562-102.046875-27.558594 28.988281 137.21875 130.445313zm0 0"></path>
+                                </svg>
+                            </span>
+                            <span class="u-icon u-icon-circle u-icon-3 book-unread" {% if is_book_read_by_user %} style="display:none" {% endif %}>
+                                <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512 512" style="">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-20e6"></use>
+                                </svg>
+                                <svg class="u-svg-content" viewBox="0 0 512 512" x="0px" y="0px" id="svg-20e6" style="enable-background:new 0 0 512 512;">
+                                    <g><g>
+                                        <path d="M432,0H80C35.888,0,0,35.888,0,80v352c0,44.112,35.888,80,80,80h352c44.112,0,80-35.888,80-80V80    C512,35.888,476.112,0,432,0z M472,432c0,22.056-17.944,40-40,40H80c-22.056,0-40-17.944-40-40V80c0-22.056,17.944-40,40-40h352    c22.056,0,40,17.944,40,40V432z"></path>
+                                    </g></g>
+                                </svg>
+                            </span>
                             <h5 class="u-text u-text-4">{{ book.title }}<br>by {{book.author.all|join:", "}}</h5>
                         </div>
                     </div>
@@ -98,7 +95,19 @@
 
     <script>
         $(".book-click").click(function(){
-            alert($(this).data("book") + " " + this.getElementsByClassName("book-unread")[0] + this.getElementsByClassName("book-read")[0]);
+            let is_read = $(this).data("read") === "True";
+            let is_read_marker = $(this).find(".book-read");
+            let is_unread_marker = $(this).find(".book-unread");
+            if (is_read) {
+                $(this).data("read", "False");
+                is_read_marker.hide();
+                is_unread_marker.show();
+            }
+            else {
+                $(this).data("read", "True");
+                is_read_marker.show();
+                is_unread_marker.hide();
+            }            
         });
     </script>
 
