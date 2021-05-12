@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block details %}
+    <link rel="stylesheet" href="{% static 'Books.css' %}" media="screen">
+{% endblock %}
+
+{% block content %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+  {% else %}
+    <p>Please login to see this page.</p>
+  {% endif %}
+{% endif %}
+
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <section class="u-align-center u-clearfix u-grey-10 u-section-1" src="" id="sec-889b">
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+          <!--<h1 class="u-text u-title u-text-2">Logged out!</h1>-->
+          <table>
+            <tr>
+              <td><h1 class="u-text u-text-2">{{ form.username.label_tag }}</h1></td>
+              <td><h1 class="u-text u-text-2">{{ form.username }}</h1></td>
+            </tr>
+            <tr>
+              <td><h1 class="u-text u-text-2">{{ form.password.label_tag }}</h1></td>
+              <td><h1 class="u-text u-text-2">{{ form.password }}</h1></td>
+            </tr>
+          </table>
+          <input type="submit" value="login" class="u-black u-btn u-btn-round u-button-style u-radius-5 u-btn-1"/>
+          <input type="hidden" name="next" value="{{ next }}" />
+          {% if form.errors %}
+            <h4 class="u-text">Your username and password didn't match.<br>Please try again.</h4>
+          {% endif %}
+      </div>
+    </section>
+  </form>
+
+{% endblock %}
