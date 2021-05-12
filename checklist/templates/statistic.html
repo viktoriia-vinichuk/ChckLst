@@ -1,14 +1,73 @@
 {% extends "base_generic.html" %}
 {% load static %}
 
+{% block details %}
+    <link rel="stylesheet" href="{% static 'My-Statistic.css' %}" media="screen">
+{% endblock %}
+
 {% block content %}
-num_books = {{ num_books }}
-num_movies = {{ num_movies }}
-num_food = {{ num_food }}
-num_drinks = {{ num_drinks }}
-all_books = {{ all_books }}
-all_movies = {{ all_movies }}
-all_food = {{ all_food }}
-all_drinks = {{ all_drinks }}
-aver_read = {{ aver_read }}
+
+    <section class="u-clearfix u-section-1" id="sec-ec39">
+        <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+            <h2 class="u-align-center u-text u-text-1">Go On!</h2>
+            <p class="u-align-center u-text u-text-2">Your results are great!</p>
+            <div class="u-list u-repeater u-list-1">
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1">
+                        <span class="u-icon u-icon-1">
+                            <img src="{% static 'images/open-book.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-3">You've read more<br>books than {{ books_percent }}%<br>of other users!</h3>
+                        <p class="u-text u-text-4">{{ user_num_books }}/{{ all_books }} books are read</p>
+                    </div>
+                </div>
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
+                        <span class="u-icon u-icon-3">
+                            <img src="{% static 'images/002-watching-tv.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-7">You've watched more<br>movies than {{ movies_percent }}%<br>of other users!</h3>
+                        <p class="u-text u-text-8">{{ user_num_movies }}/{{ all_movies }} movies are watched</p>
+                    </div>
+                </div>
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-2">
+                        <span class="u-icon u-icon-2">
+                            <img src="{% static 'images/pizza.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-5">You've tried more<br>dishes than {{ food_percent }}%<br>of other users!</h3>
+                        <p class="u-text u-text-6">{{ user_num_food }}/{{ all_food }} dishes are tried</p>
+                    </div>
+                </div>
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
+                        <span class="u-icon u-icon-3">
+                            <img src="{% static 'images/liqueur-coffee.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-7">You've tasted more<br>drinks than {{ drinks_percent }}%<br>of other users!</h3>
+                        <p class="u-text u-text-8">{{ user_num_drinks }}/{{ all_drinks }} drinks are tasted</p>
+                    </div>
+                </div>
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
+                        <span class="u-icon u-icon-3">
+                            <img src="{% static 'images/suitcase.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-7">You've visited more countries than 100% of our users!</h3>
+                        <p class="u-text u-text-8">45/50 countries are visited</p>
+                    </div>
+                </div>
+                <div class="u-align-center u-container-style u-list-item u-repeater-item">
+                    <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
+                        <span class="u-icon u-icon-3">
+                            <img src="{% static 'images/suitcase.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                        </span>
+                        <h3 class="u-text u-text-7">You've visited more countries than 100% of our users!</h3>
+                        <p class="u-text u-text-8">45/50 countries are visited</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
