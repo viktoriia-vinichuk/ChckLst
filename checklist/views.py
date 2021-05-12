@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
+from django.db.models import Count
+from django.db.models import Avg
 
 '''
 def checklists(request):
@@ -29,49 +31,67 @@ def checklists(request):
 
 def stats(request):
 
-    all_books = Book.objects.all().count()
-    all_movies = Movie.objects.all().count()
-    all_food = Food.objects.all().count()
-    all_drinks = Drink.objects.all().count()
-    '''
-    users = User.objects.all()
+    def count_all_obj(model):
+        return model.objects.all().count()
 
-    c = []
-    for i in users:
-        read = i.choice.books.all().count()
-        c.append(read)
-    aver_read = sum(c)/len(c)
-    '''
-    from django.db.models import Count
-    from django.db.models import Avg
-    #countt = User.objects.annotate(num_books=Count('choice__books'))[0].num_books
-    #users.objects.choice.all().aggregate(Avg('price'))
-    users = User.objects.annotate(num_books=Count('choice__books'))
+    all_books = count_all_obj(Book)
+    all_movies = count_all_obj(Movie)
+    all_food = count_all_obj(Food)
+    all_drinks = count_all_obj(Drink)
+
+    users = User.objects.annotate(
+        num_books=Count('choice__books'),
+        num_movies=Count('choice__movies'),
+        num_food=Count('choice__food'),
+        num_drinks=Count('choice__drinks')
+    )
+
     users_count = users.count()
-
-    c = 0
-    for i in users:
-        read = i.num_books
-        c += read
-    aver_read = c/users_count
 
     user = request.user
 
-    num_books = user.choice.books.all().count()
-    num_movies = user.choice.movies.all().count()
-    num_food = user.choice.food.all().count()
-    num_drinks = user.choice.drinks.all().count()
+    user_num_books = user.choice.books.all().count()
+    user_num_movies = user.choice.movies.all().count()
+    user_num_food = user.choice.food.all().count()
+    user_num_drinks = user.choice.drinks.all().count()
+
+    less_read = 0
+    less_watched = 0
+    less_ate = 0
+    less_drank = 0
+    
+    for i in users:
+        read = i.num_books
+        watched = i.num_movies
+        ate = i.num_food
+        drank = i.num_drinks
+        if read < user_num_books:
+            less_read += 1
+        if watched < user_num_movies:
+            less_watched += 1
+        if ate < user_num_food:
+            less_ate += 1
+        if drank < user_num_drinks:
+            less_drank += 1
+
+    books_percent = round(100 * less_read / users_count)
+    movies_percent = round(100 * less_watched / users_count)
+    food_percent = round(100 * less_ate / users_count)
+    drinks_percent = round(100 * less_drank / users_count)
     
     context = {
-        'num_books': num_books,
-        'num_movies': num_movies,
-        'num_food': num_food,
-        'num_drinks': num_drinks,
+        'user_num_books': user_num_books,
+        'user_num_movies': user_num_movies,
+        'user_num_food': user_num_food,
+        'user_num_drinks': user_num_drinks,
         'all_books': all_books,
         'all_movies': all_movies,
         'all_food': all_food,
         'all_drinks': all_drinks,
-        'aver_read': aver_read,
+        'books_percent': books_percent,
+        'movies_percent': movies_percent,
+        'food_percent': food_percent,
+        'drinks_percent': drinks_percent,
     }
 
     return render(request, 'statistic.html', context=context)

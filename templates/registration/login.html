@@ -7,15 +7,6 @@
 
 {% block content %}
 
-{% if next %}
-  {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-  {% else %}
-    <p>Please login to see this page.</p>
-  {% endif %}
-{% endif %}
-
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <section class="u-align-center u-clearfix u-grey-10 u-section-1" src="" id="sec-889b">
@@ -35,6 +26,13 @@
           <input type="hidden" name="next" value="{{ next }}" />
           {% if form.errors %}
             <h4 class="u-text">Your username and password didn't match.<br>Please try again.</h4>
+          {% endif %}
+          {% if next %}
+            {% if user.is_authenticated %}
+              <h4 class="u-text">Your account doesn't have access to this page. <br>To proceed, please login with an account that has access.</h4>
+            {% else %}
+              <h4 class="u-text">Please login to see this page.</h4>
+            {% endif %}
           {% endif %}
       </div>
     </section>
