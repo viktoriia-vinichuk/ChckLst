@@ -4,7 +4,6 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db.models import Avg
-
 '''
 def checklists(request):
     return HttpResponse("Select a checklist you wish to fill in.")
@@ -50,6 +49,7 @@ def stats(request):
 
     user = request.user
 
+    # Take into account empty choices!!!
     user_num_books = user.choice.books.all().count()
     user_num_movies = user.choice.movies.all().count()
     user_num_food = user.choice.food.all().count()
@@ -96,7 +96,6 @@ def stats(request):
 
     return render(request, 'statistic.html', context=context)
 
-
 class BookListView(generic.ListView):
     model = Book
     template_name = 'books_checklist.html'
@@ -112,8 +111,3 @@ class FoodListView(generic.ListView):
 
 class DrinkListView(generic.ListView):
     model = Drink
-
-
-class UserBooksChoice(generic.ListView):
-    queryset = Choice.objects.select_related('user')
-    template_name = 'books_checklist.html'

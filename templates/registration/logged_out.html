@@ -2,16 +2,16 @@
 {% load static %}
 
 {% block details %}
-    <link rel="stylesheet" href="{% static 'Books.css' %}" media="screen">
+  <link rel="stylesheet" href="{% static 'My-Statistic.css' %}" media="screen">
 {% endblock %}
 
 {% block content %}
-
-  <section class="u-align-center u-clearfix u-grey-10 u-section-1" src="" id="sec-889b">
+  <section class="u-align-center u-clearfix u-grey-10 u-section-2" id="sec-8eae">
     <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-        <h1 class="u-text u-title u-text-2">Logged out!</h1>
-        <a href="{% url 'login'%}" class="u-black u-btn u-btn-round u-button-style u-radius-5 u-btn-1">Login again</a>
+      <h1 class="u-text u-text-1">Logged out!</h1>
+      <div class="u-form u-form-1">
+        <a href="{% url 'login'%}" class="u-black u-btn u-btn-round u-btn-submit u-button-style u-radius-5 u-btn-1">Login again</a>
+      </div>
     </div>
   </section>
-
 {% endblock %}

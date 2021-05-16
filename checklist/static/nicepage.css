@@ -4,7 +4,50 @@
  * Copyright 2014-2020 Froala Labs
  */
 
-.chcklist-el {
+ #hideMe {
+  -moz-animation: cssAnimation 0s ease-in 5s forwards;
+  /* Firefox */
+  -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 0s ease-in 5s forwards;
+  /* Opera */
+  animation: cssAnimation 0s ease-in 5s forwards;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+  to {
+      width:0;
+      height:0;
+      overflow:hidden;
+      position: absolute;
+  }
+}
+@-webkit-keyframes cssAnimation {
+  to {
+      width:0;
+      height:0;
+      visibility:hidden;
+      position: absolute;
+  }
+}
+
+ .div-error-message {
+ 
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  padding: 20px 0px 20px 0px;
+  margin-bottom: 25px;
+  border: none;
+  border-radius: 0.15cm;
+  background: #F95D51;
+}
+
+ .chcklist-el {
 
 }
 
@@ -32326,14 +32369,14 @@ a.u-link.u-text-hover-grey-90:hover {
         .u-image:not(.u-shading) > .u-container-layout > a,
         a
         {
-        color: #000000;
+        color: #478ac9;
         }
         .u-overlap.u-overlap-transparent:not(.u-overlap-contrast) .u-header :not(.u-nav-item) > a:hover,
         .u-gradient > .u-container-layout > a:hover,
         .u-image:not(.u-shading) > .u-container-layout > a:hover,
         a:hover
         {
-        color: #000000;
+        color: #387cbd;
         }
         .u-overlap.u-overlap-transparent:not(.u-overlap-contrast) .u-header :not(.u-nav-item) > .u-btn,
         .u-gradient > .u-container-layout > .u-btn,

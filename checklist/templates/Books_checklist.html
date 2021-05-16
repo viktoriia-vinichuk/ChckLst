@@ -49,8 +49,6 @@
     <section class="u-align-left u-clearfix u-section-2" id="carousel_4e2f">
         <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <h5 class="u-text u-text-1">mark WHAT YOU'VE already READ</h5>
-
-<!-- Trying-->
         {% if book_list %}
             <div class="u-expanded-width u-list u-repeater u-list-1">
                 {% for book in book_list %}
@@ -72,31 +70,42 @@
         {% else %}
             <p>There are no books in the library.</p>
         {% endif %} 
-
-
-
-<!-- Trying-->
-
-
-
+    </section>
+    
+    <section class="u-align-center u-clearfix u-section-4" id="sec-5043">
+      {% random_book book_list user as res_random_book %}
+      <div class="u-align-center u-clearfix u-sheet u-sheet-1">
+        <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great read!</span></h2>
+        <p class="u-large-text u-text u-text-variant u-text-2">
+          <span style="font-size: 1.5rem; random-book">The secret of getting ahead is getting started {{ res_random_book.title }} by {{res_random_book.author.all|join:", "}}</span>
+        </p>
+        <div class="u-black u-border-0 u-btn u-btn-round u-button-style u-radius-5 u-btn-1 random-book-click" ><span class="random-button">Sure!</span></div>
+      </div>
     </section>
 
     <script>
-        $(".book-click").click(function(){
-            let is_read = $(this).data("read") === "True";
-            let is_read_marker = $(this).find(".book-read");
-            let is_unread_marker = $(this).find(".book-unread");
-            if (is_read) {
-                $(this).data("read", "False");
-                is_read_marker.hide();
-                is_unread_marker.show();
-            }
-            else {
-                $(this).data("read", "True");
-                is_read_marker.show();
-                is_unread_marker.hide();
-            }            
-        });
+
+      $(".book-click").click(function(){
+          let is_read = $(this).data("read") === "True";
+          let is_read_marker = $(this).find(".book-read");
+          let is_unread_marker = $(this).find(".book-unread");
+          if (is_read) {
+              $(this).data("read", "False");
+              is_read_marker.hide();
+              is_unread_marker.show();
+          }
+          else {
+              $(this).data("read", "True");
+              is_read_marker.show();
+              is_unread_marker.hide();
+          }            
+      });
+      
+      $(".random-book-click").click(function(){
+        $(".random-title").text("Your next book recommendation is");
+        $(this).find(".random-button").text("Next!");
+      });
+
     </script>
 
 {% endblock %}
