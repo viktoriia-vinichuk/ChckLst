@@ -1,4 +1,22 @@
-.u-section-1 {
+.u-section-3-1 .u-sheet-1 {
+  min-height: 411px;
+}
+
+.u-section-3-1 .u-text-1 {
+  margin: 60px 0 0;
+}
+
+.u-section-3-1 .u-text-2 {
+  font-size: 1.875rem;
+  margin: 30px 0 60px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-3-1 .u-text-2 {
+    margin-left: 56px;
+    margin-right: 56px;
+  }
+}.u-section-1 {
   background-image: none;
 }
 
@@ -14,6 +32,7 @@
 }
 
 .u-section-1 .u-text-2 {
+  font-size: 24px;
   margin: 30px 56px 0;
 }
 
@@ -63,6 +82,8 @@
 
 .u-section-2 .u-text-1 {
   text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.5rem;
   letter-spacing: 2px;
   margin: 60px 570px 0 0;
 }
@@ -72,7 +93,6 @@
   margin-bottom: 59px;
   min-height: 255px;
   grid-template-columns: calc(33.3333% - 6.66667px) calc(33.3333% - 6.66667px) calc(33.3333% - 6.66667px);
-  height: auto;
   grid-gap: 10px 10px;
 }
 
@@ -191,6 +211,7 @@
   .u-section-2 .u-list-1 {
     min-height: 210px;
     grid-template-columns: repeat(3, calc(33.333333333333336% - 6.66667px));
+    height: auto;
   }
 
   .u-section-2 .u-text-2 {
@@ -198,10 +219,6 @@
   }
 
   .u-section-2 .u-text-3 {
-    margin-left: 0;
-  }
-
-  .u-section-2 .u-text-4 {
     margin-left: 0;
   }
 
@@ -271,4 +288,63 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+}.u-block-4960-2 {
+  position: absolute;
+  bottom: 10px;
+}
+
+.u-block-4960-3 {
+  position: absolute;
+  left: 0;
+}
+
+.u-block-4960-4 {
+  position: absolute;
+  right: 0;
+}.u-section-4 .u-sheet-1 {
+  min-height: 294px;
+}
+
+.u-section-4 .u-text-1 {
+  font-size: 3rem;
+  margin: 60px 0 0;
+}
+
+.u-section-4 .u-text-2 {
+  margin: 20px 0 0;
+}
+
+.u-section-4 .u-btn-1 {
+  text-transform: uppercase;
+  font-weight: 700;
+  border-style: solid;
+  background-image: none;
+  margin: 30px auto 60px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-4 .u-text-1 {
+    width: 680px;
+  }
+}
+
+@media (max-width: 767px) {
+  .u-section-4 .u-text-1 {
+    width: 540px;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-4 .u-text-1 {
+    width: 340px;
+    font-size: 1.5rem;
+  }
+}
+
+.u-section-5 .u-sheet-1 {
+  min-height: 157px;
+}
+
+.u-section-5 .u-text-1 {
+  margin: 0 0 100px;
 }

@@ -10,4 +10,6 @@ urlpatterns = [
     path('food/', login_required(views.FoodListView.as_view()), name='food'),
     path('drinks/', login_required(views.DrinkListView.as_view()), name='drinks'),
     path('stats/', login_required(views.stats), name='stats'),
+    path('random_book/', views.random_book, name='random_book'),
+    path('book_checkbox/', views.book_checkbox, name='book_checkbox'),
 ]

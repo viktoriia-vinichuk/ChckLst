@@ -1,16 +1,27 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db.models import Avg
-
-'''
-def checklists(request):
-    return HttpResponse("Select a checklist you wish to fill in.")
-'''
+import random
 from checklist.models import Book, Movie, Food, Drink, Choice
 
+class BookListView(generic.ListView):
+    model = Book
+    template_name = 'books_checklist.html'
+
+
+class MovieListView(generic.ListView):
+    model = Movie
+
+
+class FoodListView(generic.ListView):
+    model = Food
+
+
+class DrinkListView(generic.ListView):
+    model = Drink
 
 def checklists(request):
 
@@ -50,6 +61,7 @@ def stats(request):
 
     user = request.user
 
+    # Take into account empty choices!!!
     user_num_books = user.choice.books.all().count()
     user_num_movies = user.choice.movies.all().count()
     user_num_food = user.choice.food.all().count()
@@ -96,24 +108,32 @@ def stats(request):
 
     return render(request, 'statistic.html', context=context)
 
+def book_checkbox(request):
+    if request.is_ajax and request.method == "POST":
+        user = request.user
+        book = Book.objects.get(id=request.POST['book_id'])
+        if request.POST['is_read'] == 'true':
+            user.choice.books.add(book)
+        else:
+            user.choice.books.remove(book)
+        return HttpResponse(status = 200)
+    else:
+        raise Http404
 
-class BookListView(generic.ListView):
-    model = Book
-    template_name = 'books_checklist.html'
+def random_book(request):
+    if request.is_ajax() and request.method == "GET":
+        response = {'random-book-info': get_random_book(request)}
+        return JsonResponse(response)
+    else:
+        raise Http404
 
+def get_random_book(request):
+    user = request.user
+    books_id = user.choice.books.values_list('id', flat=True).order_by('id')
+    rand_books = Book.objects.exclude(id__in=books_id)
+    if rand_books.count() > 0:
+        r_book = random.choice(rand_books)
+        return str(f'{r_book.title} by {", ".join(str(author) for author in r_book.author.all())}')
+    else:
+        return 'Nice Done! You have marked everything!'
 
-class MovieListView(generic.ListView):
-    model = Movie
-
-
-class FoodListView(generic.ListView):
-    model = Food
-
-
-class DrinkListView(generic.ListView):
-    model = Drink
-
-
-class UserBooksChoice(generic.ListView):
-    queryset = Choice.objects.select_related('user')
-    template_name = 'books_checklist.html'
