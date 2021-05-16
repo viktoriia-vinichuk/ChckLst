@@ -110,7 +110,6 @@ def stats(request):
 
 def book_checkbox(request):
     if request.is_ajax and request.method == "POST":
-        print(request.POST['is_read'])
         user = request.user
         book = Book.objects.get(id=request.POST['book_id'])
         if request.POST['is_read'] == 'true':
@@ -129,13 +128,10 @@ def random_book(request):
         raise Http404
 
 def get_random_book(request):
-    book_list = Book.objects.all()
     user = request.user
-    rand_books = []
-    for book in book_list:
-        if user not in [item.user for item in book.choice_set.all()]:
-            rand_books.append(book)
-    if len(rand_books) > 0:
+    books_id = user.choice.books.values_list('id', flat=True).order_by('id')
+    rand_books = Book.objects.exclude(id__in=books_id)
+    if rand_books.count() > 0:
         r_book = random.choice(rand_books)
         return str(f'{r_book.title} by {", ".join(str(author) for author in r_book.author.all())}')
     else:

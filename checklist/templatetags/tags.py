@@ -14,5 +14,7 @@ def is_all_read(books, user):
         user_num_books = user.choice.books.all().count()
         if num_books == user_num_books:
             return True
+        else:
+            return False
     except:
         return False
