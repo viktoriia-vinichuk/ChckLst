@@ -72,14 +72,17 @@
         {% endif %} 
     </section>
     
-    <section class="u-align-center u-clearfix u-section-4" id="sec-5043">
-      {% random_book book_list user as res_random_book %}
-      <div class="u-align-center u-clearfix u-sheet u-sheet-1">
+    {% is_all_read book_list user as is_all_read_by_user %}
+    <section class="u-align-center u-clearfix u-section-4 random-section" id="sec-5043">
+      <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-book-read" {% if is_all_read_by_user %} style="display: none;" {% endif %}>
         <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great read!</span></h2>
         <p class="u-large-text u-text u-text-variant u-text-2">
-          <span style="font-size: 1.5rem; random-book">The secret of getting ahead is getting started {{ res_random_book.title }} by {{res_random_book.author.all|join:", "}}</span>
+          <span class="random-book" style="font-size: 1.5rem;">The secret of getting ahead is getting started</span>
         </p>
         <div class="u-black u-border-0 u-btn u-btn-round u-button-style u-radius-5 u-btn-1 random-book-click" ><span class="random-button">Sure!</span></div>
+      </div>
+      <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-book-unread" {% if not is_all_read_by_user %} style="display: none;" {% endif %}>
+        <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Nice Done! You have marked everything!</span></h2>
       </div>
     </section>
 
@@ -89,21 +92,42 @@
           let is_read = $(this).data("read") === "True";
           let is_read_marker = $(this).find(".book-read");
           let is_unread_marker = $(this).find(".book-unread");
+          let book_id = $(this).data("book");
+          $.ajax({
+            type: 'POST',
+            url: '../book_checkbox/',
+            data: {
+              'book_id': book_id,
+              'is_read': !is_read,
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+            }, 
+            dataType: 'json',
+          })
           if (is_read) {
-              $(this).data("read", "False");
-              is_read_marker.hide();
-              is_unread_marker.show();
+            $(this).data("read", "False");
+            is_read_marker.hide();
+            is_unread_marker.show();
           }
           else {
-              $(this).data("read", "True");
-              is_read_marker.show();
-              is_unread_marker.hide();
-          }            
+            $(this).data("read", "True");
+            is_read_marker.show();
+            is_unread_marker.hide();
+          }
       });
       
       $(".random-book-click").click(function(){
         $(".random-title").text("Your next book recommendation is");
         $(this).find(".random-button").text("Next!");
+        $.ajax({
+          type: 'GET',
+          async: true,
+          url: '../random_book/',
+          data: "book=book-info;",
+          success: function(data) {
+              $(".random-book").text(data['random-book-info']);
+          },
+          dataType: 'json',
+        });
       });
 
     </script>

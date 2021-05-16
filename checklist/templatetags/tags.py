@@ -1,5 +1,4 @@
 from django import template
-import random
 
 register = template.Library()
 
@@ -9,13 +8,8 @@ def is_read(book, user):
     return a
 
 @register.simple_tag
-def random_book(book_list, user):
-    rand_books = []
-    for book in book_list:
-        if user not in [item.user for item in book.choice_set.all()]:
-            rand_books.append(book)
-    if len(rand_books) > 0:
-        return random.choice(rand_books)
-    else:
-        return 'Nice Done! You have marked everything!'
-    
+def is_all_read(books, user):
+    num_books = books.count()
+    user_num_books = user.choice.books.all().count()
+    if num_books == user_num_books:
+        return True
