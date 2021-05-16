@@ -10,6 +10,9 @@ def is_read(book, user):
 @register.simple_tag
 def is_all_read(books, user):
     num_books = books.count()
-    user_num_books = user.choice.books.all().count()
-    if num_books == user_num_books:
-        return True
+    try:
+        user_num_books = user.choice.books.all().count()
+        if num_books == user_num_books:
+            return True
+    except:
+        return False
