@@ -2,6 +2,8 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 
 class HideModelAdmin(admin.ModelAdmin):
@@ -15,6 +17,10 @@ from .models import Author, B_Genre, Book
 admin.site.register(Author, HideModelAdmin)
 
 admin.site.register(B_Genre, HideModelAdmin)
+
+class BookResource(resources.ModelResource):
+    class Meta:
+        model = Book
 
 @admin.register(Book)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
@@ -50,6 +56,10 @@ class AuthorAdmin(admin.ModelAdmin):
         MovieInline,
     ]
 
+class MovieResource(resources.ModelResource):
+    class Meta:
+        model = Movie
+
 # FOOD Checklist ------------------------------------------------------------------------------
 
 from .models import F_Kind, Food
@@ -70,6 +80,10 @@ class AuthorAdmin(admin.ModelAdmin):
         FoodInline,
     ]
 
+class FoodResource(resources.ModelResource):
+    class Meta:
+        model = Food
+
 # DRINKS Checklist ----------------------------------------------------------------------------
 
 from .models import D_kind, Drink
@@ -89,6 +103,10 @@ class AuthorAdmin(admin.ModelAdmin):
     inlines = [
         DrinkInline,
     ]
+
+class DrinkResource(resources.ModelResource):
+    class Meta:
+        model = Drink
 
 # User Profile Checklists ---------------------------------------------------------------------
 
