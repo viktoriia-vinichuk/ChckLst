@@ -126,10 +126,10 @@ class Drink(models.Model):
 
 class Choice(models.Model):
    user = models.OneToOneField(User, on_delete=models.CASCADE)
-   books = models.ManyToManyField(Book, blank=True, null=True)
-   movies = models.ManyToManyField(Movie, blank=True, null=True)
-   food = models.ManyToManyField(Food, blank=True, null=True)
-   drinks = models.ManyToManyField(Drink, blank=True, null=True)
+   books = models.ManyToManyField(Book, blank=True)
+   movies = models.ManyToManyField(Movie, blank=True)
+   food = models.ManyToManyField(Food, blank=True)
+   drinks = models.ManyToManyField(Drink, blank=True)
    
    def __str__(self):
       return 'User_choice'

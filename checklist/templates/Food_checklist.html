@@ -1,0 +1,120 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load tags %}
+
+{% block details %}
+    <link rel="stylesheet" href="{% static 'Books.css' %}" media="screen">
+{% endblock %}
+
+{% block content %}
+  <section class="u-align-center u-clearfix u-grey-10 u-section-1" src="" id="sec-889b">
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+          <h1 class="u-text u-title u-text-1">Food</h1>
+          <p class="u-large-text u-text u-text-variant u-text-2">
+              Try something new!<br>Have your next meal on stand-by.
+          </p>
+          <a href="#checklist" class="u-black u-btn u-btn-round u-button-style u-radius-5 u-btn-1">START</a>
+      </div>
+  </section>
+  <div id="checklist"></div>
+
+  <section class="u-align-left u-clearfix u-section-2" id="carousel_4e2f">
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+      <h5 class="u-text u-text-1">mark WHAT YOU'VE already TRIED</h5>
+      {% if food_list %}
+          <div class="u-expanded-width u-list u-repeater u-list-1">
+              {% for dish in food_list %}
+                  <div class="u-align-left u-container-style u-list-item u-repeater-item">
+                      {% is_eaten dish user as is_dish_eaten_by_user %}
+                      <div class="u-container-layout u-similar-container u-container-layout-1 dish-click chcklist-el" data-eaten={{ is_dish_eaten_by_user }} data-dish={{ dish.id }} style="cursor:pointer;">
+                          <span class="u-icon u-text-black u-icon-1 dish-eaten" {% if not is_dish_eaten_by_user %} style="display:none" {% endif %}>
+                              <img src="{% static 'images/checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                          </span>
+                          <span class="u-icon u-icon-1 dish-uneaten" {% if is_dish_eaten_by_user %} style="display:none" {% endif %}>
+                              <img src="{% static 'images/empty-checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                          </span>
+                          <h5 class="u-text u-text-4" style="padding-top: 3.5%;">{{ dish.name }}</h5>
+                      </div>
+                  </div>
+              
+              {% endfor %}
+          </div>
+      {% else %}
+          <p>There are no dishes in the list.</p>
+      {% endif %} 
+  </section>
+  
+  {% is_all_eaten food_list user as is_all_eaten_by_user %}
+  <section class="u-align-center u-clearfix u-section-4 random-dish-section" id="sec-5043" data-all-eaten={{ is_all_eaten_by_user }}>
+    <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-eaten" {% if is_all_eaten_by_user %} style="display: none;" {% endif %}>
+      <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great meal!</span></h2>
+      <p class="u-large-text u-text u-text-variant u-text-2">
+        <span class="random-dish" style="font-size: 1.5rem;">The secret of getting ahead is getting started</span>
+      </p>
+      <div class="u-black u-border-0 u-btn u-btn-round u-button-style u-radius-5 u-btn-1 random-dish-click" ><span class="random-button">Sure!</span></div>
+    </div>
+    <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-eaten" {% if not is_all_eaten_by_user %} style="display: none;" {% endif %}>
+      <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Nice Done! You have marked everything!</span></h2>
+    </div>
+  </section>
+
+  <script>
+
+    $(".dish-click").click(function(){
+        let is_eaten = $(this).data("eaten") === "True";
+        let is_eaten_marker = $(this).find(".dish-eaten");
+        let is_uneaten_marker = $(this).find(".dish-uneaten");
+        let dish_id = $(this).data("dish");
+        $.ajax({
+          type: 'POST',
+          url: '../food_checkbox/',
+          data: {
+            'dish_id': dish_id,
+            'is_eaten': !is_eaten,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          dataType: 'json',
+          success: function (response) {
+            let is_all_eaten = response["is-all-eaten"];
+            if (is_all_eaten) {
+              $(".random-dish-section").data("all-eaten", "True");
+              $(".all-is-eaten").show();
+              $(".all-is-not-eaten").hide();
+            }
+            else {
+              $(".random-dish-section").data("all-eaten", "False");
+              $(".all-is-eaten").hide();
+              $(".all-is-not-eaten").show();
+            };
+          },
+        });
+        if (is_eaten) {
+          $(this).data("eaten", "False");
+          is_eaten_marker.hide();
+          is_uneaten_marker.show();
+        }
+        else {
+          $(this).data("eaten", "True");
+          is_eaten_marker.show();
+          is_uneaten_marker.hide();
+        };
+    });
+    
+    $(".random-dish-click").click(function(){
+      $(".random-title").text("Your next dish recommendation is");
+      $(this).find(".random-button").text("Next!");
+      $.ajax({
+        type: 'GET',
+        async: true,
+        url: '../random_dish/',
+        data: "dish=dish-info;",
+        success: function(data) {
+            $(".random-dish").text(data['random-dish-info']);
+        },
+        dataType: 'json',
+      });
+    });
+
+  </script>
+
+{% endblock %}
