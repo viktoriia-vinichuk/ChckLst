@@ -25,7 +25,7 @@ class Book(models.Model):
    order = models.PositiveIntegerField(default=0, blank=False, null=False)
    title = models.CharField(max_length=200)
    author = models.ManyToManyField(Author)
-   genre = models.ManyToManyField(B_Genre)
+   genre = models.ManyToManyField(B_Genre, blank=True)
 
    def __str__(self):
       return self.title
@@ -55,7 +55,7 @@ class Movie(models.Model):
    order = models.PositiveIntegerField(default=0, blank=False, null=False)
    title = models.CharField(max_length=200)
    year = models.IntegerField()
-   genre = models.ManyToManyField(M_Genre)
+   genre = models.ManyToManyField(M_Genre, blank=True)
 
    def __str__(self):
       return self.title
@@ -81,7 +81,7 @@ class Food(models.Model):
    order = models.PositiveIntegerField(default=0, blank=False, null=False)
    name = models.CharField(max_length=200)
    countries = CountryField(multiple=True,blank=True)
-   food_kinds = models.ManyToManyField(F_Kind)
+   food_kinds = models.ManyToManyField(F_Kind, blank=True)
 
    def __str__(self):
       return self.name
@@ -110,7 +110,7 @@ class Drink(models.Model):
    name = models.CharField(max_length=200)
    alcohol = models.BooleanField(default=False)
    countries = CountryField(multiple=True,blank=True)
-   drink_kinds = models.ManyToManyField(D_kind)
+   drink_kinds = models.ManyToManyField(D_kind, blank=True)
 
    def __str__(self):
       return self.name
