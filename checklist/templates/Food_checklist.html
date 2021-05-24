@@ -25,7 +25,7 @@
           <div class="u-expanded-width u-list u-repeater u-list-1">
               {% for dish in food_list %}
                   <div class="u-align-left u-container-style u-list-item u-repeater-item">
-                      {% is_eaten dish user as is_dish_eaten_by_user %}
+                      {% is_marked dish user as is_dish_eaten_by_user %}
                       <div class="u-container-layout u-similar-container u-container-layout-1 dish-click chcklist-el" data-eaten={{ is_dish_eaten_by_user }} data-dish={{ dish.id }} style="cursor:pointer;">
                           <span class="u-icon u-text-black u-icon-1 dish-eaten" {% if not is_dish_eaten_by_user %} style="display:none" {% endif %}>
                               <img src="{% static 'images/checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
@@ -44,7 +44,7 @@
       {% endif %} 
   </section>
   
-  {% is_all_eaten food_list user as is_all_eaten_by_user %}
+  {% is_all_eaten user as is_all_eaten_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-dish-section" id="sec-5043" data-all-eaten={{ is_all_eaten_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-eaten" {% if is_all_eaten_by_user %} style="display: none;" {% endif %}>
       <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great meal!</span></h2>

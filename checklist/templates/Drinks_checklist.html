@@ -25,7 +25,7 @@
           <div class="u-expanded-width u-list u-repeater u-list-1">
               {% for drink in drink_list %}
                   <div class="u-align-left u-container-style u-list-item u-repeater-item">
-                      {% is_drunk drink user as is_drink_drunk_by_user %}
+                      {% is_marked drink user as is_drink_drunk_by_user %}
                       <div class="u-container-layout u-similar-container u-container-layout-1 drink-click chcklist-el" data-drunk={{ is_drink_drunk_by_user }} data-drink={{ drink.id }} style="cursor:pointer;">
                           <span class="u-icon u-text-black u-icon-1 drink-drunk" {% if not is_drink_drunk_by_user %} style="display:none" {% endif %}>
                               <img src="{% static 'images/checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
@@ -44,7 +44,7 @@
       {% endif %} 
   </section>
   
-  {% is_all_drunk drink_list user as is_all_drunk_by_user %}
+  {% is_all_drunk user as is_all_drunk_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-drink-section" id="sec-5043" data-all-drunk={{ is_all_drunk_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-drunk" {% if is_all_drunk_by_user %} style="display: none;" {% endif %}>
       <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great drink!</span></h2>

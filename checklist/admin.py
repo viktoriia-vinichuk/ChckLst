@@ -2,15 +2,15 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.db.models import fields
+from .models import Author, B_Genre, Book, M_Genre, Movie, F_Kind, Food, Ingredient, D_kind, Drink, Choice
+
+# GENERAL -------------------------------------------------------------------------------------
 
 class HideModelAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         return {}
 
 # BOOKS Checklist -----------------------------------------------------------------------------
-
-from .models import Author, B_Genre, Book
 
 admin.site.register(Author, HideModelAdmin)
 
@@ -32,8 +32,6 @@ class AuthorAdmin(admin.ModelAdmin):
 
 # MOVIES Checklist ----------------------------------------------------------------------------
 
-from .models import M_Genre, Movie
-
 admin.site.register(M_Genre, HideModelAdmin)
 
 @admin.register(Movie)
@@ -51,8 +49,6 @@ class AuthorAdmin(admin.ModelAdmin):
     ]
 
 # FOOD Checklist ------------------------------------------------------------------------------
-
-from .models import F_Kind, Food, Ingredient
 
 admin.site.register(Ingredient, HideModelAdmin)
 
@@ -74,8 +70,6 @@ class AuthorAdmin(admin.ModelAdmin):
 
 # DRINKS Checklist ----------------------------------------------------------------------------
 
-from .models import D_kind, Drink
-
 admin.site.register(D_kind, HideModelAdmin)
 
 @admin.register(Drink)
@@ -93,8 +87,6 @@ class AuthorAdmin(admin.ModelAdmin):
     ]
 
 # User Profile Checklists ---------------------------------------------------------------------
-
-from .models import Choice
 
 class ChoicesInline(admin.StackedInline):    
     model = Choice

@@ -25,7 +25,7 @@
           <div class="u-expanded-width u-list u-repeater u-list-1">
               {% for book in book_list %}
                   <div class="u-align-left u-container-style u-list-item u-repeater-item">
-                      {% is_read book user as is_book_read_by_user %}
+                      {% is_marked book user as is_book_read_by_user %}
                       <div class="u-container-layout u-similar-container u-container-layout-1 book-click chcklist-el" data-read={{ is_book_read_by_user }} data-book={{ book.id }} style="cursor:pointer;">
                           <span class="u-icon u-text-black u-icon-1 book-read" {% if not is_book_read_by_user %} style="display:none" {% endif %}>
                               <img src="{% static 'images/checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
@@ -44,7 +44,7 @@
       {% endif %} 
   </section>
   
-  {% is_all_read book_list user as is_all_read_by_user %}
+  {% is_all_read user as is_all_read_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-book-section" id="sec-5043" data-all-read={{ is_all_read_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-read" {% if is_all_read_by_user %} style="display: none;" {% endif %}>
       <h2 class="u-align-center u-text u-text-1 title-discover"><span class="random-title">Discover your next great read!</span></h2>
