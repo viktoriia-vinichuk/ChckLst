@@ -41,14 +41,14 @@
                 <span class="u-icon u-icon-2">
                     <img src="{% static 'images/pizza.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
                 </span>
-                <h3 class="u-text u-text-5">You've tried {{ user_num_food }}/{{ all_food }} dishes!</h3>
+                <h3 class="u-text u-text-5">You've tried<br>{{ user_num_food }}/{{ all_food }} dishes!</h3>
                 <p class="u-text u-text-6" style="font-size: 20px;">More than<br>{{ food_percent }}% of users</p>
             </div>
         </div>
         <div class="u-align-center u-container-style u-list-item u-repeater-item">
             <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
                 <span class="u-icon u-icon-3">
-                    <img src="{% static 'images/liqueur-coffee.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
+                    <img src="{% static 'images/011-coffee-cup.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
                 </span>
                 <h3 class="u-text u-text-7">You've tasted<br>{{ user_num_drinks }}/{{ all_drinks }} drinks!</h3>
                 <p class="u-text u-text-8" style="font-size: 20px;">More than<br>{{ drinks_percent }}% of users</p>
@@ -74,7 +74,7 @@
                     <span style="font-size: 1.25rem;">
                         <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● Books read:</span>
                         <span style="letter-spacing: 0px;">
-                            <span style="line-height: 1.0;">{{ user_num_books }}/{{ all_books }}</span>
+                            <span style="line-height: 1.0;">{{ user_books_percent }} %</span>
                         </span>
                     </span>
                 </p>
@@ -101,7 +101,7 @@
                   <span style="font-size: 1.25rem;">
                     <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● Movies watched:</span>
                     <span style="letter-spacing: 0px;">
-                      <span style="line-height: 1.0;">{{ user_num_movies }}/{{ all_movies }}</span>
+                      <span style="line-height: 1.0;">{{ user_movies_percent }} %</span>
                     </span>
                   </span>
                 </p>
@@ -136,15 +136,23 @@
                   <span style="font-size: 1.25rem;">
                     <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● Food tried:</span>
                     <span style="letter-spacing: 0px;">
-                      <span style="line-height: 1.0;">{{ user_num_food }}/{{ all_food }}</span>
+                      <span style="line-height: 1.0;">{{ user_food_percent }} %</span>
                     </span>
                   </span>
                 </p>
                 <p>
                   <span style="font-size: 1.25rem;">
-                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most eaten food kinds:</span>
+                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most popular food types:</span>
                     <span style="letter-spacing: 0px;">
                       <span style="line-height: 1.0;">{{ fav_food_kinds }}</span>
+                    </span>
+                  </span>
+                </p>
+                <p>
+                  <span style="font-size: 1.25rem;">
+                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most popular food ingredients:</span>
+                    <span style="letter-spacing: 0px;">
+                      <span style="line-height: 1.0;">{{ fav_food_ingredient }}</span>
                     </span>
                   </span>
                 </p>
@@ -171,13 +179,21 @@
                   <span style="font-size: 1.25rem;">
                     <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● Drinks tasted:</span>
                     <span style="letter-spacing: 0px;">
-                      <span style="line-height: 1.0;">{{ user_num_drinks }}/{{ all_drinks }}</span>
+                      <span style="line-height: 1.0;">{{ user_drinks_percent }} %</span>
                     </span>
                   </span>
                 </p>
                 <p>
                   <span style="font-size: 1.25rem;">
-                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most tasted drink kinds:</span>
+                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most popular drink types:</span>
+                    <span style="letter-spacing: 0px;">
+                      <span style="line-height: 1.0;">{{ fav_drink_ingredient }}</span>
+                    </span>
+                  </span>
+                </p>
+                <p>
+                  <span style="font-size: 1.25rem;">
+                    <span style="font-weight: 700; line-height: 1; letter-spacing: 0px;">● The most popular drink ingredients:</span>
                     <span style="letter-spacing: 0px;">
                       <span style="line-height: 1.0;">{{ fav_drink_kinds }}</span>
                     </span>

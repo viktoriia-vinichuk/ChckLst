@@ -22,7 +22,7 @@ class B_Genre(models.Model):
 
 class Book(models.Model):
 
-   order = models.PositiveIntegerField(default=0, blank=False, null=False)
+   order = models.PositiveIntegerField(default=0)
    title = models.CharField(max_length=200)
    author = models.ManyToManyField(Author)
    genre = models.ManyToManyField(B_Genre, blank=True)
@@ -69,6 +69,13 @@ class Movie(models.Model):
 
 # FOOD Models ----------------------------------------------------------------------------------
 
+class Ingredient(models.Model):
+   ingredient = models.CharField(max_length=100)
+   def __str__(self):
+      return self.ingredient
+   class Meta(object):
+      ordering = ['ingredient']
+
 class F_Kind(models.Model):
    food_kind = models.CharField(max_length=100)
    def __str__(self):
@@ -80,8 +87,9 @@ class Food(models.Model):
 
    order = models.PositiveIntegerField(default=0, blank=False, null=False)
    name = models.CharField(max_length=200)
-   countries = CountryField(multiple=True,blank=True)
+   country = CountryField(blank=True)
    food_kinds = models.ManyToManyField(F_Kind, blank=True)
+   food_ingredients = models.ManyToManyField(Ingredient, blank=True)
 
    def __str__(self):
       return self.name
@@ -109,8 +117,9 @@ class Drink(models.Model):
    order = models.PositiveIntegerField(default=0, blank=False, null=False)
    name = models.CharField(max_length=200)
    alcohol = models.BooleanField(default=False)
-   countries = CountryField(multiple=True,blank=True)
+   country = CountryField(blank=True)
    drink_kinds = models.ManyToManyField(D_kind, blank=True)
+   drink_ingredients = models.ManyToManyField(Ingredient, blank=True)
 
    def __str__(self):
       return self.name

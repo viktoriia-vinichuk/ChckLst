@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db.models import Avg
 import random
-from checklist.models import Book, Movie, Food, Drink, Choice, B_Genre, M_Genre, F_Kind, D_kind
+from checklist.models import Book, Ingredient, Movie, Food, Drink, Choice, B_Genre, M_Genre, F_Kind, D_kind, Ingredient
 from collections import Counter, OrderedDict
 import country_converter
 
@@ -33,6 +33,41 @@ class DrinkListView(generic.ListView):
 def count_all_obj(model):
     return model.objects.all().count()
 
+def centuryFromYear(year):
+
+    roman = OrderedDict()
+    roman[1000] = 'M'
+    roman[900] = 'CM'
+    roman[500] = 'D'
+    roman[400] = 'CD'
+    roman[100] = 'C'
+    roman[90] = 'XC'
+    roman[50] = 'L'
+    roman[40] = 'XL'
+    roman[10] = 'X'
+    roman[9] = 'IX'
+    roman[5] = 'V'
+    roman[4] = 'IV'
+    roman[1] = 'I'
+
+    def year_to_roman(year):
+        for r in roman.keys():
+            x, y = divmod(year, r)
+            yield roman[r] * x
+            year -= (r * x)
+            if year <= 0:
+                break
+
+    return "".join([a for a in year_to_roman((year + 99) // 100)])
+
+def del_none(*args):
+    for arg in args:
+        if None in arg:
+            del arg[None]
+
+def percentage(part, whole):
+    return round(100 * part / whole)
+
 # Checklists ----------------------------------------------------------------------------------
 
 def checklists(request):
@@ -41,39 +76,12 @@ def checklists(request):
 # Statictic -----------------------------------------------------------------------------------
 
 def favorite_items(user, model):
-
-    def centuryFromYear(year):
-
-        roman = OrderedDict()
-        roman[1000] = 'M'
-        roman[900] = 'CM'
-        roman[500] = 'D'
-        roman[400] = 'CD'
-        roman[100] = 'C'
-        roman[90] = 'XC'
-        roman[50] = 'L'
-        roman[40] = 'XL'
-        roman[10] = 'X'
-        roman[9] = 'IX'
-        roman[5] = 'V'
-        roman[4] = 'IV'
-        roman[1] = 'I'
-
-        def year_to_roman(year):
-            for r in roman.keys():
-                x, y = divmod(year, r)
-                yield roman[r] * x
-                year -= (r * x)
-                if year <= 0:
-                    break
-
-        return "".join([a for a in year_to_roman((year + 99) // 100)])
-
     if model == Book:
         books_id = user.choice.books.values_list('id', flat=True).order_by('id')
         books = model.objects.filter(id__in=books_id)
         genres = books.values_list('genre', flat=True).order_by('genre')
         fav_genres = Counter(genres)
+        del_none(fav_genres)
         if fav_genres:
             return ', '.join(B_Genre.objects.get(id=k).genre for k in list(fav_genres.keys())[:3])
         else:
@@ -85,6 +93,7 @@ def favorite_items(user, model):
         years = movies.values_list('year', flat=True).order_by('year')
         fav_genres = Counter(genres)
         fav_years = Counter(years)
+        del_none(fav_genres, fav_years)
         nothing_to_show = 'mark watched movies to get stats'
         if fav_genres:
             return (
@@ -97,32 +106,56 @@ def favorite_items(user, model):
         food_id = user.choice.food.values_list('id', flat=True).order_by('id')
         food = model.objects.filter(id__in=food_id)
         kinds = food.values_list('food_kinds', flat=True).order_by('food_kinds')
-        countries = food.values_list('countries', flat=True).order_by('countries')
+        ingredients = food.values_list('food_ingredients', flat=True).order_by('food_ingredients')
+        countries = food.values_list('country', flat=True).order_by('country')
         fav_kinds = Counter(kinds)
+        fav_ingredients = Counter(ingredients)
         fav_country = Counter(countries)
+        del_none(fav_kinds, fav_country, fav_ingredients)
         nothing_to_show = 'mark eaten dishes to get stats'
-        if fav_kinds:
-            return (
-                ', '.join(F_Kind.objects.get(id=k).food_kind for k in list(fav_kinds.keys())[:3]), 
-                country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
-                )
+        need_more_choices = 'mark more eaten dishes to get these stats'
+        if fav_country:
+            if len(fav_kinds) > 2 and len(fav_ingredients) > 2:
+                return (
+                    ', '.join(F_Kind.objects.get(id=k).food_kind for k in list(fav_kinds.keys())[:3]), 
+                    ', '.join(Ingredient.objects.get(id=k).ingredient for k in list(fav_ingredients.keys())[:3]),
+                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    )
+            else:
+                return (
+                    need_more_choices, 
+                    need_more_choices,
+                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    )
         else:
-            return (nothing_to_show, nothing_to_show)
+            return (nothing_to_show, nothing_to_show, nothing_to_show)
     elif model == Drink:
         drink_id = user.choice.drinks.values_list('id', flat=True).order_by('id')
         drinks = Drink.objects.filter(id__in=drink_id)
         kinds = drinks.values_list('drink_kinds', flat=True).order_by('drink_kinds')
-        countries = drinks.values_list('countries', flat=True).order_by('countries')
+        ingredients = drinks.values_list('drink_ingredients', flat=True).order_by('drink_ingredients')
+        countries = drinks.values_list('country', flat=True).order_by('country')
         fav_kinds = Counter(kinds)
+        fav_ingredients = Counter(ingredients)
         fav_country = Counter(countries)
+        del_none(fav_kinds, fav_country, fav_ingredients)
         nothing_to_show = 'mark drinks you have tried to get stats'
-        if fav_kinds:
-            return (
-                ', '.join(D_kind.objects.get(id=k).drink_kind for k in list(fav_kinds.keys())[:3]), 
-                country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
-                )
+        need_more_choices = 'mark more tried drinks to get these stats'
+        if fav_country:
+            if len(fav_kinds) > 2 and len(fav_ingredients) > 2:
+                return (
+                    ', '.join(D_kind.objects.get(id=k).drink_kind for k in list(fav_kinds.keys())[:3]), 
+                    ', '.join(Ingredient.objects.get(id=k).ingredient for k in list(fav_ingredients.keys())[:3]), 
+                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    )
+            else:
+                return (
+                    need_more_choices, 
+                    need_more_choices, 
+                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    )
         else:
-            return (nothing_to_show, nothing_to_show)
+            return (nothing_to_show, nothing_to_show, nothing_to_show)
     else:
         return 'the given category does not exist'
 
@@ -172,19 +205,6 @@ def stats(request):
             less_ate += 1
         if drank < user_num_drinks:
             less_drank += 1
-
-    books_percent = round(100 * less_read / users_count)
-    movies_percent = round(100 * less_watched / users_count)
-    food_percent = round(100 * less_ate / users_count)
-    drinks_percent = round(100 * less_drank / users_count)
-
-    fav_book_genres = favorite_items(user, Book)
-    fav_movie_genres = favorite_items(user, Movie)[0]
-    fav_movie_century = favorite_items(user, Movie)[1]
-    fav_food_kinds = favorite_items(user, Food)[0]
-    fav_food_country = favorite_items(user, Food)[1]
-    fav_drink_kinds = favorite_items(user, Drink)[0]
-    fav_drink_country = favorite_items(user, Drink)[1]
     
     context = {
         'user_num_books': user_num_books,
@@ -195,17 +215,23 @@ def stats(request):
         'all_movies': all_movies,
         'all_food': all_food,
         'all_drinks': all_drinks,
-        'books_percent': books_percent,
-        'movies_percent': movies_percent,
-        'food_percent': food_percent,
-        'drinks_percent': drinks_percent,
-        'fav_book_genres': fav_book_genres,
-        'fav_movie_genres': fav_movie_genres,
-        'fav_movie_century': fav_movie_century,
-        'fav_food_kinds': fav_food_kinds,
-        'fav_food_country': fav_food_country,
-        'fav_drink_kinds': fav_drink_kinds,
-        'fav_drink_country': fav_drink_country,
+        'books_percent': percentage(less_read, users_count),
+        'movies_percent': percentage(less_watched, users_count),
+        'food_percent': percentage(less_ate, users_count),
+        'drinks_percent': percentage(less_drank, users_count),
+        'user_books_percent': percentage(user_num_books, all_books),
+        'user_movies_percent': percentage(user_num_movies, all_movies),
+        'user_food_percent': percentage(user_num_food, all_food),
+        'user_drinks_percent': percentage(user_num_drinks, all_drinks),
+        'fav_book_genres': favorite_items(user, Book),
+        'fav_movie_genres': favorite_items(user, Movie)[0],
+        'fav_movie_century': favorite_items(user, Movie)[1],
+        'fav_food_kinds': favorite_items(user, Food)[0],
+        'fav_food_ingredient': favorite_items(user, Food)[1],
+        'fav_food_country': favorite_items(user, Food)[2],
+        'fav_drink_kinds': favorite_items(user, Drink)[0],
+        'fav_drink_ingredient': favorite_items(user, Drink)[1],
+        'fav_drink_country': favorite_items(user, Drink)[2],
         'stats_exist': stats_exist,
     }
 
@@ -215,7 +241,7 @@ def stats(request):
 
 def is_all_read(l_user):
 
-    num_books = Book.objects.all().count()
+    num_books = count_all_obj(Book)
     try:
         user_num_books = l_user.choice.books.all().count()
         if num_books == user_num_books:
@@ -260,7 +286,7 @@ def get_random_book(request):
 
 def is_all_watched(l_user):
 
-    num_movies = Movie.objects.all().count()
+    num_movies = count_all_obj(Movie)
     try:
         user_num_movies = l_user.choice.movies.all().count()
         if num_movies == user_num_movies:
@@ -305,7 +331,7 @@ def get_random_movie(request):
 
 def is_all_eaten(l_user):
 
-    num_dishes = Food.objects.all().count()
+    num_dishes = count_all_obj(Food)
     try:
         user_num_dishes = l_user.choice.food.all().count()
         if num_dishes == user_num_dishes:
@@ -350,7 +376,7 @@ def get_random_dish(request):
 
 def is_all_drunk(l_user):
 
-    num_drinks = Drink.objects.all().count()
+    num_drinks = count_all_obj(Drink)
     try:
         user_num_drinks = l_user.choice.drinks.all().count()
         if num_drinks == user_num_drinks:
