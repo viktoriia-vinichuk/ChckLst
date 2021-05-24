@@ -68,7 +68,7 @@
                   <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/" style="padding: 10px 20px;">Checklists</a>
                 </li>
                 <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link" href="My-Statistic.html" style="padding: 10px 20px;">Statistic</a>
+                  <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/stats/" style="padding: 10px 20px;">Statistic</a>
                 </li>
                 <li class="u-nav-item">
                   {% if user.is_authenticated %}
@@ -91,7 +91,7 @@
   {% block footer %}
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-8b79">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1" style="margin-bottom: 54px;">A journey of a thousand miles begins with a single step.<br>ChckLst © Viktoriia Vinichuk 2021</p>
+        <p class="u-small-text u-text u-text-variant u-text-1" style="margin-bottom: 54px;">A journey of a thousand miles begins with a single step<br>ChckLst © Viktoriia Vinichuk 2021</p>
       </div>
     </footer>
   {% endblock %}
@@ -106,6 +106,7 @@
       }
     }
     function topFunction() {
+      $('html, body').animate({scrollTop: 0},500);
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     }

@@ -11,7 +11,7 @@
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <h1 class="u-text u-title u-text-1">Drinks</h1>
           <p class="u-large-text u-text u-text-variant u-text-2">
-            People who wonder if the glass is half empty<br>or full miss the point. The glass is refillable.<br>Have your next drink on stand-by.
+            People who wonder if the glass is half empty<br>or full miss the point. The glass is refillable.
           </p>
           <a href="#checklist" class="u-black u-btn u-btn-round u-button-style u-radius-5 u-btn-1">START</a>
       </div>
@@ -33,7 +33,7 @@
                           <span class="u-icon u-icon-1 drink-undrunk" {% if is_drink_drunk_by_user %} style="display:none" {% endif %}>
                               <img src="{% static 'images/empty-checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
                           </span>
-                          <h5 class="u-text u-text-4" style="padding-top: 3.5%;">{{ drink.name }}</h5>
+                          <h5 class="u-text u-text-4">{{ drink.name }} <img src="{% static 'images/oversized-wine-glass (2).svg' %}" {% if not drink.alcohol %} style="width: 15px; display:none;" {% else %} style="width: 15px;" {% endif %}><br><img src="{% static 'images/map-placeholder.svg' %}" style="width: 15px; opacity: 0.5;"> <span style="color: #6b6b6b; font-weight: normal;">{{ drink.country.name }}</span>
                       </div>
                   </div>
               

@@ -11,7 +11,7 @@
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <h1 class="u-text u-title u-text-1">Books</h1>
           <p class="u-large-text u-text u-text-variant u-text-2">
-              Read in sprints.<br>Have your next book on stand-by.
+            If you don’t like to read, you<br>haven’t found the right book.
           </p>
           <a href="#checklist" class="u-black u-btn u-btn-round u-button-style u-radius-5 u-btn-1">START</a>
       </div>
@@ -33,7 +33,7 @@
                           <span class="u-icon u-icon-1 book-unread" {% if is_book_read_by_user %} style="display:none" {% endif %}>
                               <img src="{% static 'images/empty-checkbox.svg' %}" class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 512.001 512.001" style="">
                           </span>
-                          <h5 class="u-text u-text-4">{{ book.title }}<br>by {{book.author.all|join:", "}}</h5>
+                          <h5 class="u-text u-text-4">{{ book.title }}<br><span style="color: #6b6b6b; font-weight: normal;">by {{book.author.all|join:", "}}</span></h5>
                       </div>
                   </div>
               

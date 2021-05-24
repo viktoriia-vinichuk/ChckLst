@@ -2,9 +2,7 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
-
+from django.db.models import fields
 
 class HideModelAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
@@ -17,10 +15,6 @@ from .models import Author, B_Genre, Book
 admin.site.register(Author, HideModelAdmin)
 
 admin.site.register(B_Genre, HideModelAdmin)
-
-class BookResource(resources.ModelResource):
-    class Meta:
-        model = Book
 
 @admin.register(Book)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
@@ -56,21 +50,19 @@ class AuthorAdmin(admin.ModelAdmin):
         MovieInline,
     ]
 
-class MovieResource(resources.ModelResource):
-    class Meta:
-        model = Movie
-
 # FOOD Checklist ------------------------------------------------------------------------------
 
-from .models import F_Kind, Food
+from .models import F_Kind, Food, Ingredient
+
+admin.site.register(Ingredient, HideModelAdmin)
 
 admin.site.register(F_Kind, HideModelAdmin)
 
 @admin.register(Food)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('order','name','display_kind')
+    list_display = ('order','name', 'country', 'display_kind')
     list_display_links = ('order','name')
-    filter_horizontal = ('food_kinds',)
+    filter_horizontal = ('food_kinds', 'food_ingredients')
 
 class FoodInline(admin.TabularInline):
     model = Food
@@ -80,10 +72,6 @@ class AuthorAdmin(admin.ModelAdmin):
         FoodInline,
     ]
 
-class FoodResource(resources.ModelResource):
-    class Meta:
-        model = Food
-
 # DRINKS Checklist ----------------------------------------------------------------------------
 
 from .models import D_kind, Drink
@@ -92,9 +80,9 @@ admin.site.register(D_kind, HideModelAdmin)
 
 @admin.register(Drink)
 class MyModelAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('order','name','alcohol','display_kind')
+    list_display = ('order','name', 'country','alcohol','display_kind')
     list_display_links = ('order','name')
-    filter_horizontal = ('drink_kinds',)
+    filter_horizontal = ('drink_kinds', 'drink_ingredients')
 
 class DrinkInline(admin.TabularInline):
     model = Drink
@@ -103,10 +91,6 @@ class AuthorAdmin(admin.ModelAdmin):
     inlines = [
         DrinkInline,
     ]
-
-class DrinkResource(resources.ModelResource):
-    class Meta:
-        model = Drink
 
 # User Profile Checklists ---------------------------------------------------------------------
 
