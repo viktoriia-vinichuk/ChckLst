@@ -1,15 +1,12 @@
-from typing import KeysView
-from django.db.models.expressions import F
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.db.models import Avg
-import random
-from checklist.models import Book, Ingredient, Movie, Food, Drink, Choice, B_Genre, M_Genre, F_Kind, D_kind, Ingredient
+from .models import Book, Ingredient, Movie, Food, Drink, B_Genre, M_Genre, F_Kind, D_kind, Ingredient
 from collections import Counter, OrderedDict
 import country_converter
+import random
 
 class BookListView(generic.ListView):
     model = Book
@@ -34,8 +31,8 @@ def count_all_obj(model):
     return model.objects.all().count()
 
 def centuryFromYear(year):
-
     roman = OrderedDict()
+    
     roman[1000] = 'M'
     roman[900] = 'CM'
     roman[500] = 'D'
@@ -82,10 +79,11 @@ def favorite_items(user, model):
         genres = books.values_list('genre', flat=True).order_by('genre')
         fav_genres = Counter(genres)
         del_none(fav_genres)
+        nothing_to_show = 'mark read books to get stats'
         if fav_genres:
             return ', '.join(B_Genre.objects.get(id=k).genre for k in list(fav_genres.keys())[:3])
         else:
-            return 'mark read books to get stats'
+            return nothing_to_show
     elif model == Movie:
         movies_id = user.choice.movies.values_list('id', flat=True).order_by('id')
         movies = model.objects.filter(id__in=movies_id)
@@ -240,16 +238,9 @@ def stats(request):
 # BOOKS ---------------------------------------------------------------------------------------
 
 def is_all_read(l_user):
-
     num_books = count_all_obj(Book)
-    try:
-        user_num_books = l_user.choice.books.all().count()
-        if num_books == user_num_books:
-            return True
-        else:
-            return False
-    except:
-        return False
+    user_num_books = l_user.choice.books.all().count()
+    return num_books == user_num_books
 
 def book_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -285,16 +276,9 @@ def get_random_book(request):
 # MOVIES --------------------------------------------------------------------------------------
 
 def is_all_watched(l_user):
-
     num_movies = count_all_obj(Movie)
-    try:
-        user_num_movies = l_user.choice.movies.all().count()
-        if num_movies == user_num_movies:
-            return True
-        else:
-            return False
-    except:
-        return False
+    user_num_movies = l_user.choice.movies.all().count()
+    return num_movies == user_num_movies
 
 def movie_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -330,16 +314,10 @@ def get_random_movie(request):
 # FOOD ----------------------------------------------------------------------------------------
 
 def is_all_eaten(l_user):
-
     num_dishes = count_all_obj(Food)
-    try:
-        user_num_dishes = l_user.choice.food.all().count()
-        if num_dishes == user_num_dishes:
-            return True
-        else:
-            return False
-    except:
-        return False
+    user_num_dishes = l_user.choice.food.all().count()
+    return num_dishes == user_num_dishes
+
 
 def food_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -375,16 +353,9 @@ def get_random_dish(request):
 # DRINKS --------------------------------------------------------------------------------------
 
 def is_all_drunk(l_user):
-
     num_drinks = count_all_obj(Drink)
-    try:
-        user_num_drinks = l_user.choice.drinks.all().count()
-        if num_drinks == user_num_drinks:
-            return True
-        else:
-            return False
-    except:
-        return False
+    user_num_drinks = l_user.choice.drinks.all().count()
+    return num_drinks == user_num_drinks
 
 def drink_checkbox(request):
     if request.is_ajax and request.method == "POST":
