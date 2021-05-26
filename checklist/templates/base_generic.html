@@ -1,115 +1,114 @@
 <!DOCTYPE html>
 <html style="font-size: 16px;">
-<head>
-  {% block title %}<title>ChckLst</title>{% endblock %}
-  {% load static %}
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8">
-  <meta name="keywords" content="A journey of a thousand miles&nbsp;begins&nbsp;with a single&nbsp;step.">
-  <meta name="page_type" content="np-template-header-footer-from-plugin"> 
-  <link rel="stylesheet" href="{% static 'nicepage.css' %}" media="screen">
-  {% block details %}{% endblock %}
-  <script class="u-script" type="text/javascript" src="{% static 'jquery.js' %}"></script>
-  <script class="u-script" type="text/javascript" src="{% static 'nicepage.js' %}"></script>
-  <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
-  <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
-  <meta property="og:title" content="ChckLst">
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#478ac9">
-</head>
-<body class="u-body">
-  <button onclick="topFunction()" id="Scroll-btn" title="Go to top"><img src="{% static 'images/navigate-up-arrow.svg' %}" style="width: 55px;"></button>
-  {% block header %}
-    <header class="u-clearfix u-header u-header" id="sec-2e38"><div class="u-clearfix u-sheet u-sheet-1">
-      <a href="http://127.0.0.1:8000/checklists/" class="u-image u-logo u-image-1" data-image-width="512" data-image-height="512">
-        <img src="{% static 'images/checkbox.svg' %}" class="u-logo-image u-logo-image-1 logo-checkbox" data-image-width="64">
-      </a>
-      <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
-        <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
-          <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
-            <svg>
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
-            </svg>
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-              <defs>
-                <symbol id="menu-hamburger" viewBox="0 0 16 16" style="width: 16px; height: 16px;">
-                  <rect y="1" width="16" height="2"></rect>
-                  <rect y="7" width="16" height="2"></rect>
-                  <rect y="13" width="16" height="2"></rect>
-                </symbol>
-              </defs>
-            </svg>
-          </a>
-        </div>
-        <div class="u-custom-menu u-nav-container">
-          <ul class="u-nav u-unstyled u-nav-1">
-            <li class="u-nav-item menu-item">
-              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="http://127.0.0.1:8000/checklists/" style="padding: 10px 20px; vertical-align: middle;">● Checklists</a>
-            </li>
-            <li class="u-nav-item menu-item">
-              <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="http://127.0.0.1:8000/checklists/stats/" style="padding: 10px 20px;">● Statistic</a>
-            </li>
-            <li class="u-nav-item menu-item">
-              {% if user.is_authenticated %}
-                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base logout" href="http://127.0.0.1:8000/accounts/logout/" style="padding: 10px 20px;">● Logout</a>
-              {% else %}
-                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base login" href="http://127.0.0.1:8000/accounts/login/" style="padding: 10px 20px;">☀ Login</a>
-              {% endif %}
-            </li>
-          </ul>
-        </div>
-        <div class="u-custom-menu u-nav-container-collapse">
-          <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
-            <div class="u-sidenav-overflow">
-              <div class="u-menu-close"></div>
-              <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
-                <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/" style="padding: 10px 20px;">Checklists</a>
-                </li>
-                <li class="u-nav-item">
-                  <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/stats/" style="padding: 10px 20px;">Statistic</a>
-                </li>
-                <li class="u-nav-item">
-                  {% if user.is_authenticated %}
-                    <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/accounts/logout/" style="padding: 10px 20px;">Logout</a>
-                  {% else %}
-                    <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/accounts/login/" style="padding: 10px 20px;">Login</a>
-                  {% endif %}
-                  
-                </li>
-              </ul>
-            </div>
+  <head>
+    {% block title %}<title>ChckLst</title>{% endblock %}
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="A journey of a thousand miles&nbsp;begins&nbsp;with a single&nbsp;step.">
+    <meta name="page_type" content="np-template-header-footer-from-plugin"> 
+    <link rel="stylesheet" href="{% static 'nicepage.css' %}" media="screen">
+    {% block details %}{% endblock %}
+    <script class="u-script" type="text/javascript" src="{% static 'jquery.js' %}"></script>
+    <script class="u-script" type="text/javascript" src="{% static 'nicepage.js' %}"></script>
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
+    <meta property="og:title" content="ChckLst">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#478ac9">
+  </head>
+  <body class="u-body">
+    <button onclick="topFunction()" id="Scroll-btn" title="Go to top"><img src="{% static 'images/navigate-up-arrow.svg' %}" style="width: 55px;"></button>
+    {% block header %}
+      <header class="u-clearfix u-header u-header" id="sec-2e38"><div class="u-clearfix u-sheet u-sheet-1">
+        <a href="http://127.0.0.1:8000/checklists/" class="u-image u-logo u-image-1" data-image-width="512" data-image-height="512">
+          <img src="{% static 'images/checkbox.svg' %}" class="u-logo-image u-logo-image-1 logo-checkbox" data-image-width="64">
+        </a>
+        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+              <svg>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+              </svg>
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                  <symbol id="menu-hamburger" viewBox="0 0 16 16" style="width: 16px; height: 16px;">
+                    <rect y="1" width="16" height="2"></rect>
+                    <rect y="7" width="16" height="2"></rect>
+                    <rect y="13" width="16" height="2"></rect>
+                  </symbol>
+                </defs>
+              </svg>
+            </a>
           </div>
-          <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1">
+              <li class="u-nav-item menu-item">
+                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="http://127.0.0.1:8000/checklists/" style="padding: 10px 20px; vertical-align: middle;">● Checklists</a>
+              </li>
+              <li class="u-nav-item menu-item">
+                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="http://127.0.0.1:8000/checklists/stats/" style="padding: 10px 20px;">● Statistic</a>
+              </li>
+              <li class="u-nav-item menu-item">
+                {% if user.is_authenticated %}
+                  <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base logout" href="http://127.0.0.1:8000/accounts/logout/" style="padding: 10px 20px;">● Logout</a>
+                {% else %}
+                  <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base login" href="http://127.0.0.1:8000/accounts/login/" style="padding: 10px 20px;">☀ Login</a>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                  <li class="u-nav-item">
+                    <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/" style="padding: 10px 20px;">Checklists</a>
+                  </li>
+                  <li class="u-nav-item">
+                    <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/checklists/stats/" style="padding: 10px 20px;">Statistic</a>
+                  </li>
+                  <li class="u-nav-item">
+                    {% if user.is_authenticated %}
+                      <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/accounts/logout/" style="padding: 10px 20px;">Logout</a>
+                    {% else %}
+                      <a class="u-button-style u-nav-link" href="http://127.0.0.1:8000/accounts/login/" style="padding: 10px 20px;">Login</a>
+                    {% endif %}
+                    
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+      </div></header>
+    {% endblock %}
+    {% block content %}
+    {% endblock %}
+    {% block footer %}
+      <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-8b79">
+        <div class="u-clearfix u-sheet u-sheet-1">
+          <p class="u-small-text u-text u-text-variant u-text-1" style="margin-bottom: 54px;">A journey of a thousand miles begins with a single step<br>ChckLst © Viktoriia Vinichuk 2021</p>
         </div>
-      </nav>
-    </div></header>
-  {% endblock %}
-  {% block content %}
-  {% endblock %}
-  {% block footer %}
-    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-8b79">
-      <div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1" style="margin-bottom: 54px;">A journey of a thousand miles begins with a single step<br>ChckLst © Viktoriia Vinichuk 2021</p>
-      </div>
-    </footer>
-  {% endblock %}
-  <script>
-    var mybutton = document.getElementById("Scroll-btn");
-    window.onscroll = function() {scrollFunction()};
-    function scrollFunction() {
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-      } else {
-        mybutton.style.display = "none";
+      </footer>
+    {% endblock %}
+    <script>
+      var mybutton = document.getElementById("Scroll-btn");
+      window.onscroll = function() {scrollFunction()};
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
       }
-    }
-    function topFunction() {
-      $('html, body').animate({scrollTop: 0},500);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    }
-  </script>
-</body>
+      function topFunction() {
+        $('html, body').animate({scrollTop: 0},500);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+    </script>
+  </body>
 </html>
