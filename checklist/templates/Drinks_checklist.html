@@ -59,7 +59,6 @@
   </section>
 
   <script>
-
     $(".drink-click").click(function(){
         let is_drunk = $(this).data("drunk") === "True";
         let is_drunk_marker = $(this).find(".drink-drunk");
@@ -99,7 +98,6 @@
           is_undrunk_marker.hide();
         };
     });
-    
     $(".random-drink-click").click(function(){
       $(".random-title").text("Your next drink recommendation is");
       $(this).find(".random-button").text("Next!");
@@ -114,7 +112,5 @@
         dataType: 'json',
       });
     });
-
   </script>
-
 {% endblock %}

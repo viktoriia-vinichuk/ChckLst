@@ -79,11 +79,10 @@ def favorite_items(user, model):
         genres = books.values_list('genre', flat=True).order_by('genre')
         fav_genres = Counter(genres)
         del_none(fav_genres)
-        nothing_to_show = 'mark read books to get stats'
         if fav_genres:
             return ', '.join(B_Genre.objects.get(id=k).genre for k in list(fav_genres.keys())[:3])
         else:
-            return nothing_to_show
+            return 'mark read books to get stats'
     elif model == Movie:
         movies_id = user.choice.movies.values_list('id', flat=True).order_by('id')
         movies = model.objects.filter(id__in=movies_id)
@@ -158,80 +157,90 @@ def favorite_items(user, model):
         return 'the given category does not exist'
 
 def stats(request):
-
-    all_books = count_all_obj(Book)
-    all_movies = count_all_obj(Movie)
-    all_food = count_all_obj(Food)
-    all_drinks = count_all_obj(Drink)
-
-    users = User.objects.annotate(
-        num_books=Count('choice__books'),
-        num_movies=Count('choice__movies'),
-        num_food=Count('choice__food'),
-        num_drinks=Count('choice__drinks')
+    
+    users = User.objects.values('id').annotate(
+        num_books=Count('choice__books', distinct=True),
+        num_movies=Count('choice__movies', distinct=True),
+        num_food=Count('choice__food', distinct=True),
+        num_drinks=Count('choice__drinks', distinct=True)
     )
-
-    users_count = users.count()
-
+    
+    users_count = len(users)
+    
     user = request.user
-
-    user_num_books = user.choice.books.all().count()
-    user_num_movies = user.choice.movies.all().count()
-    user_num_food = user.choice.food.all().count()
-    user_num_drinks = user.choice.drinks.all().count()
+    
+    user_num_obj = list(filter(lambda d: d['id'] == user.id, users))[0]
+    user_num_books = user_num_obj['num_books']
+    user_num_movies = user_num_obj['num_movies']
+    user_num_food = user_num_obj['num_food']
+    user_num_drinks = user_num_obj['num_drinks']
 
     stats_count = (user_num_books, user_num_movies, user_num_food, user_num_drinks)
     stats_exist = True
     if not any(stats_count):
-        stats_exist = False 
+        stats_exist = False
+    
+    if stats_exist:
 
-    less_read = 0
-    less_watched = 0
-    less_ate = 0
-    less_drank = 0
+        all_books = count_all_obj(Book)
+        all_movies = count_all_obj(Movie)
+        all_food = count_all_obj(Food)
+        all_drinks = count_all_obj(Drink)
+
+        less_read = len(list(filter(lambda d: d['num_books'] < user_num_books, users)))
+        less_watched = len(list(filter(lambda d: d['num_movies'] < user_num_movies, users)))
+        less_ate = len(list(filter(lambda d: d['num_food'] < user_num_food, users)))
+        less_drank = len(list(filter(lambda d: d['num_drinks'] < user_num_drinks, users)))
+        
+        books_percent = percentage(less_read, users_count-1)
+        movies_percent = percentage(less_watched, users_count-1)
+        food_percent = percentage(less_ate, users_count-1)
+        drinks_percent = percentage(less_drank, users_count-1)
+
+        user_books_percent = percentage(user_num_books, all_books)
+        user_movies_percent = percentage(user_num_movies, all_movies)
+        user_food_percent = percentage(user_num_food, all_food)
+        user_drinks_percent = percentage(user_num_drinks, all_drinks)
+
+        fav_book_genres = favorite_items(user, Book)
+        fav_movie_items = favorite_items(user, Movie)
+        fav_food_items = favorite_items(user, Food)
+        fav_drink_items = favorite_items(user, Drink)
     
-    for i in users:
-        read = i.num_books
-        watched = i.num_movies
-        ate = i.num_food
-        drank = i.num_drinks
-        if read < user_num_books:
-            less_read += 1
-        if watched < user_num_movies:
-            less_watched += 1
-        if ate < user_num_food:
-            less_ate += 1
-        if drank < user_num_drinks:
-            less_drank += 1
-    
-    context = {
-        'user_num_books': user_num_books,
-        'user_num_movies': user_num_movies,
-        'user_num_food': user_num_food,
-        'user_num_drinks': user_num_drinks,
-        'all_books': all_books,
-        'all_movies': all_movies,
-        'all_food': all_food,
-        'all_drinks': all_drinks,
-        'books_percent': percentage(less_read, users_count),
-        'movies_percent': percentage(less_watched, users_count),
-        'food_percent': percentage(less_ate, users_count),
-        'drinks_percent': percentage(less_drank, users_count),
-        'user_books_percent': percentage(user_num_books, all_books),
-        'user_movies_percent': percentage(user_num_movies, all_movies),
-        'user_food_percent': percentage(user_num_food, all_food),
-        'user_drinks_percent': percentage(user_num_drinks, all_drinks),
-        'fav_book_genres': favorite_items(user, Book),
-        'fav_movie_genres': favorite_items(user, Movie)[0],
-        'fav_movie_century': favorite_items(user, Movie)[1],
-        'fav_food_kinds': favorite_items(user, Food)[0],
-        'fav_food_ingredient': favorite_items(user, Food)[1],
-        'fav_food_country': favorite_items(user, Food)[2],
-        'fav_drink_kinds': favorite_items(user, Drink)[0],
-        'fav_drink_ingredient': favorite_items(user, Drink)[1],
-        'fav_drink_country': favorite_items(user, Drink)[2],
-        'stats_exist': stats_exist,
-    }
+        context = {
+            'user_num_books': user_num_books,
+            'user_num_movies': user_num_movies,
+            'user_num_food': user_num_food,
+            'user_num_drinks': user_num_drinks,
+            'all_books': all_books,
+            'all_movies': all_movies,
+            'all_food': all_food,
+            'all_drinks': all_drinks,
+            'books_percent': books_percent,
+            'movies_percent': movies_percent,
+            'food_percent': food_percent,
+            'drinks_percent': drinks_percent,
+            'user_books_percent': user_books_percent,
+            'user_movies_percent': user_movies_percent,
+            'user_food_percent': user_food_percent,
+            'user_drinks_percent': user_drinks_percent,
+            'fav_book_genres': fav_book_genres,
+            'fav_movie_genres': fav_movie_items[0],
+            'fav_movie_century': fav_movie_items[1],
+            'fav_food_kinds': fav_food_items[0],
+            'fav_food_ingredient': fav_food_items[1],
+            'fav_food_country': fav_food_items[2],
+            'fav_drink_kinds': fav_drink_items[0],
+            'fav_drink_ingredient': fav_drink_items[1],
+            'fav_drink_country': fav_drink_items[2],
+            'stats_exist': stats_exist,
+        }
+
+    else:
+
+        context = {
+            'stats_exist': stats_exist,
+        }
 
     return render(request, 'statistic.html', context=context)
 
