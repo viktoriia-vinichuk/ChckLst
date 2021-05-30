@@ -164,12 +164,12 @@ def stats(request):
         num_food=Count('choice__food', distinct=True),
         num_drinks=Count('choice__drinks', distinct=True)
     )
-    
-    users_count = len(users)
-    
+
+    users_count = count_all_obj(User)
+
     user = request.user
-    
-    user_num_obj = list(filter(lambda d: d['id'] == user.id, users))[0]
+
+    user_num_obj = users.filter(id=user.id)[0]
     user_num_books = user_num_obj['num_books']
     user_num_movies = user_num_obj['num_movies']
     user_num_food = user_num_obj['num_food']
@@ -179,7 +179,7 @@ def stats(request):
     stats_exist = True
     if not any(stats_count):
         stats_exist = False
-    
+
     if stats_exist:
 
         all_books = count_all_obj(Book)
@@ -187,11 +187,15 @@ def stats(request):
         all_food = count_all_obj(Food)
         all_drinks = count_all_obj(Drink)
 
-        less_read = len(list(filter(lambda d: d['num_books'] < user_num_books, users)))
-        less_watched = len(list(filter(lambda d: d['num_movies'] < user_num_movies, users)))
-        less_ate = len(list(filter(lambda d: d['num_food'] < user_num_food, users)))
-        less_drank = len(list(filter(lambda d: d['num_drinks'] < user_num_drinks, users)))
-        
+        # NEEDS TO BE REWRITTEN - START
+
+        less_read = len((filter(lambda d: d['num_books'] < user_num_books, users)))
+        less_watched = len((filter(lambda d: d['num_movies'] < user_num_movies, users)))
+        less_ate = len((filter(lambda d: d['num_food'] < user_num_food, users)))
+        less_drank = len((filter(lambda d: d['num_drinks'] < user_num_drinks, users)))
+
+        # NEEDS TO BE REWRITTEN - END
+
         books_percent = percentage(less_read, users_count-1)
         movies_percent = percentage(less_watched, users_count-1)
         food_percent = percentage(less_ate, users_count-1)
