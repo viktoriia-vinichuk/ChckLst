@@ -189,10 +189,10 @@ def stats(request):
 
         # NEEDS TO BE REWRITTEN - START
 
-        less_read = len(list(filter(lambda d: d['num_books'] < user_num_books, users)))
-        less_watched = len(list(filter(lambda d: d['num_movies'] < user_num_movies, users)))
-        less_ate = len(list(filter(lambda d: d['num_food'] < user_num_food, users)))
-        less_drank = len(list(filter(lambda d: d['num_drinks'] < user_num_drinks, users)))
+        less_read = users.filter(num_books__lt=user_num_books).count()
+        less_watched = users.filter(num_movies__lt=user_num_movies).count()
+        less_ate = users.filter(num_food__lt=user_num_food).count()
+        less_drank = users.filter(num_drinks__lt=user_num_drinks).count()
 
         # NEEDS TO BE REWRITTEN - END
 
