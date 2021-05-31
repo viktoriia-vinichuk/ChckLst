@@ -187,14 +187,10 @@ def stats(request):
         all_food = count_all_obj(Food)
         all_drinks = count_all_obj(Drink)
 
-        # NEEDS TO BE REWRITTEN - START 
-
-        less_read = users.filter(num_books__lt=user_num_books).count()
-        less_watched = users.filter(num_movies__lt=user_num_movies).count()
-        less_ate = users.filter(num_food__lt=user_num_food).count()
-        less_drank = users.filter(num_drinks__lt=user_num_drinks).count()
-
-        # NEEDS TO BE REWRITTEN - END 
+        less_read = users.filter(num_books__lt=user_num_books).values('num_books').count()
+        less_watched = users.filter(num_movies__lt=user_num_movies).values('num_movies').count()
+        less_ate = users.filter(num_food__lt=user_num_food).values('num_food').count()
+        less_drank = users.filter(num_drinks__lt=user_num_drinks).values('num_drinks').count()
 
         books_percent = percentage(less_read, users_count-1)
         movies_percent = percentage(less_watched, users_count-1)
