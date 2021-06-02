@@ -2,13 +2,15 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Author, B_Genre, Book, M_Genre, Movie, F_Kind, Food, Ingredient, D_kind, Drink, Choice
+from .models import Author, B_Genre, Book, M_Genre, Movie, F_Kind, Food, Ingredient, D_kind, Drink, Choice, Statistic
 
 # GENERAL -------------------------------------------------------------------------------------
 
 class HideModelAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         return {}
+
+admin.site.register(Statistic, HideModelAdmin)
 
 # BOOKS Checklist -----------------------------------------------------------------------------
 
