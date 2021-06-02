@@ -2,8 +2,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
-from django.db.models import Count
-from .models import Book, Ingredient, Movie, Food, Drink, B_Genre, M_Genre, F_Kind, D_kind, Ingredient
+from .models import Book, Ingredient, Movie, Food, Drink, B_Genre, M_Genre, F_Kind, D_kind, Ingredient, Statistic
 from collections import Counter, OrderedDict
 import country_converter
 import random
@@ -64,6 +63,17 @@ def del_none(*args):
 
 def percentage(part, whole):
     return round(100 * part / whole)
+
+def update_statistic(user):
+    Statistic.objects.update_or_create(
+        user_id=user,
+        defaults={
+            'num_books': user.choice.books.count(),
+            'num_movies': user.choice.movies.count(),
+            'num_food': user.choice.food.count(),
+            'num_drinks': user.choice.drinks.count(), 
+        }
+    )
 
 # Checklists ----------------------------------------------------------------------------------
 
@@ -157,23 +167,20 @@ def favorite_items(user, model):
         return 'the given category does not exist'
 
 def stats(request):
-    
-    users = User.objects.values('id').annotate(
-        num_books=Count('choice__books', distinct=True),
-        num_movies=Count('choice__movies', distinct=True),
-        num_food=Count('choice__food', distinct=True),
-        num_drinks=Count('choice__drinks', distinct=True)
-    )
 
+    users = User.objects.all()
+
+    for i in users:
+        update_statistic(i)
+    
     users_count = count_all_obj(User)
 
     user = request.user
 
-    user_num_obj = users.filter(id=user.id)[0]
-    user_num_books = user_num_obj['num_books']
-    user_num_movies = user_num_obj['num_movies']
-    user_num_food = user_num_obj['num_food']
-    user_num_drinks = user_num_obj['num_drinks']
+    user_num_books = Statistic.objects.get(user_id=user.id).num_books
+    user_num_movies = Statistic.objects.get(user_id=user.id).num_movies
+    user_num_food = Statistic.objects.get(user_id=user.id).num_food
+    user_num_drinks = Statistic.objects.get(user_id=user.id).num_drinks
 
     stats_count = (user_num_books, user_num_movies, user_num_food, user_num_drinks)
     stats_exist = True
@@ -187,10 +194,10 @@ def stats(request):
         all_food = count_all_obj(Food)
         all_drinks = count_all_obj(Drink)
 
-        less_read = users.filter(num_books__lt=user_num_books).values('num_books').count()
-        less_watched = users.filter(num_movies__lt=user_num_movies).values('num_movies').count()
-        less_ate = users.filter(num_food__lt=user_num_food).values('num_food').count()
-        less_drank = users.filter(num_drinks__lt=user_num_drinks).values('num_drinks').count()
+        less_read = Statistic.objects.filter(num_books__lt=user_num_books).count()
+        less_watched = Statistic.objects.filter(num_movies__lt=user_num_movies).count()
+        less_ate = Statistic.objects.filter(num_food__lt=user_num_food).count()
+        less_drank = Statistic.objects.filter(num_drinks__lt=user_num_drinks).count()
 
         books_percent = percentage(less_read, users_count-1)
         movies_percent = percentage(less_watched, users_count-1)

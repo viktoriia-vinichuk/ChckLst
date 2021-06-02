@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import fields
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_countries.fields import CountryField
@@ -147,3 +148,15 @@ class Choice(models.Model):
 def create_choice(sender, instance, created, **kwargs):
    if created:
       Choice.objects.create(user=instance)
+
+# Stats Model ---------------------------------------------------------------------------------
+
+class Statistic(models.Model):
+   user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+   num_books = models.PositiveIntegerField(default=0, blank=False, null=False)
+   num_movies = models.PositiveIntegerField(default=0, blank=False, null=False)
+   num_food = models.PositiveIntegerField(default=0, blank=False, null=False)
+   num_drinks = models.PositiveIntegerField(default=0, blank=False, null=False)
+
+   def __str__(self):
+      return str(self.user_id.username)
