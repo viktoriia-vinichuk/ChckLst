@@ -36,14 +36,14 @@
                           <h5 class="u-text u-text-4">{{ drink.name }} <img src="{% static 'images/oversized-wine-glass (2).svg' %}" {% if not drink.alcohol %} style="width: 15px; display:none;" {% else %} style="width: 15px;" {% endif %}><br><img src="{% static 'images/map-placeholder.svg' %}" style="width: 15px; opacity: 0.5;"> <span style="color: #6b6b6b; font-weight: normal;">{{ drink.country.name }}</span>
                       </div>
                   </div>
-              
+
               {% endfor %}
           </div>
       {% else %}
           <p>There are no drinks in the list.</p>
-      {% endif %} 
+      {% endif %}
   </section>
-  
+
   {% is_all_drunk user as is_all_drunk_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-drink-section" id="sec-5043" data-all-drunk={{ is_all_drunk_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-drunk" {% if is_all_drunk_by_user %} style="display: none;" {% endif %}>
@@ -77,11 +77,13 @@
             let is_all_drunk = response["is-all-drunk"];
             if (is_all_drunk) {
               $(".random-drink-section").data("all-drunk", "True");
+              $(".random-title").text("Nice Done! You have marked everything!");
               $(".all-is-drunk").show();
               $(".all-is-not-drunk").hide();
             }
             else {
               $(".random-drink-section").data("all-drunk", "False");
+              $(".random-title").text("Discover your next great drink!");
               $(".all-is-drunk").hide();
               $(".all-is-not-drunk").show();
             };
@@ -98,6 +100,7 @@
           is_undrunk_marker.hide();
         };
     });
+
     $(".random-drink-click").click(function(){
       $(".random-title").text("Your next drink recommendation is");
       $(this).find(".random-button").text("Next!");

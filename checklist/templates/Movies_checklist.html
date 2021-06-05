@@ -36,14 +36,14 @@
                           <h5 class="u-text u-text-4">{{ movie.title }}<br><span style="color: #6b6b6b; font-weight: normal;">({{ movie.year }})</span></h5>
                       </div>
                   </div>
-              
+
               {% endfor %}
           </div>
       {% else %}
           <p>There are no movies in the list.</p>
-      {% endif %} 
+      {% endif %}
   </section>
-  
+
   {% is_all_watched user as is_all_watched_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-movie-section" id="sec-5043" data-all-watched={{ is_all_watched_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-watched" {% if is_all_watched_by_user %} style="display: none;" {% endif %}>
@@ -78,11 +78,13 @@
             let is_all_watched = response["is-all-watched"];
             if (is_all_watched) {
               $(".random-movie-section").data("all-watched", "True");
+              $(".random-title").text("Nice Done! You have marked everything!");
               $(".all-is-watched").show();
               $(".all-is-not-watched").hide();
             }
             else {
               $(".random-movie-section").data("all-watched", "False");
+              $(".random-title").text("Discover your next great movie!");
               $(".all-is-watched").hide();
               $(".all-is-not-watched").show();
             };
@@ -99,7 +101,7 @@
           is_unwatched_marker.hide();
         };
     });
-    
+
     $(".random-movie-click").click(function(){
       $(".random-title").text("Your next movie recommendation is");
       $(this).find(".random-button").text("Next!");
