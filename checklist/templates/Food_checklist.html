@@ -36,14 +36,14 @@
                           <h5 class="u-text u-text-4">{{ dish.name }}<br><img src="{% static 'images/map-placeholder.svg' %}" style="width: 15px; opacity: 0.5;"> <span style="color: #6b6b6b; font-weight: normal;">{{ dish.country.name }}</span></h5>
                       </div>
                   </div>
-              
+
               {% endfor %}
           </div>
       {% else %}
           <p>There are no dishes in the list.</p>
-      {% endif %} 
+      {% endif %}
   </section>
-  
+
   {% is_all_eaten user as is_all_eaten_by_user %}
   <section class="u-align-center u-clearfix u-section-4 random-dish-section" id="sec-5043" data-all-eaten={{ is_all_eaten_by_user }}>
     <div class="u-align-center u-clearfix u-sheet u-sheet-1 all-is-not-eaten" {% if is_all_eaten_by_user %} style="display: none;" {% endif %}>
@@ -78,11 +78,13 @@
             let is_all_eaten = response["is-all-eaten"];
             if (is_all_eaten) {
               $(".random-dish-section").data("all-eaten", "True");
+              $(".random-title").text("Nice Done! You have marked everything!");
               $(".all-is-eaten").show();
               $(".all-is-not-eaten").hide();
             }
             else {
               $(".random-dish-section").data("all-eaten", "False");
+              $(".random-title").text("Discover your next great meal!");
               $(".all-is-eaten").hide();
               $(".all-is-not-eaten").show();
             };
@@ -99,7 +101,7 @@
           is_uneaten_marker.hide();
         };
     });
-    
+
     $(".random-dish-click").click(function(){
       $(".random-title").text("Your next dish recommendation is");
       $(this).find(".random-button").text("Next!");

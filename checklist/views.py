@@ -1,19 +1,25 @@
+import random
+from collections import Counter, OrderedDict
+
+import country_converter
+from django.contrib.auth.models import User
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.views import generic
-from django.contrib.auth.models import User
-from .models import Book, Ingredient, Movie, Food, Drink, B_Genre, M_Genre, F_Kind, D_kind, Ingredient, Statistic
-from collections import Counter, OrderedDict
-import country_converter
-import random
+
+from .models import (B_Genre, Book, D_kind, Drink, F_Kind, Food, Ingredient,
+                     M_Genre, Movie, Statistic)
+
 
 class BookListView(generic.ListView):
     model = Book
     template_name = 'Books_checklist.html'
 
+
 class MovieListView(generic.ListView):
     model = Movie
     template_name = 'Movies_checklist.html'
+
 
 class FoodListView(generic.ListView):
     model = Food
@@ -24,14 +30,16 @@ class DrinkListView(generic.ListView):
     model = Drink
     template_name = 'Drinks_checklist.html'
 
+
 # GENERAL -------------------------------------------------------------------------------------
 
 def count_all_obj(model):
     return model.objects.all().count()
 
-def centuryFromYear(year):
+
+def century_from_year(year):
     roman = OrderedDict()
-    
+
     roman[1000] = 'M'
     roman[900] = 'CM'
     roman[500] = 'D'
@@ -56,13 +64,16 @@ def centuryFromYear(year):
 
     return "".join([a for a in year_to_roman((year + 99) // 100)])
 
+
 def del_none(*args):
     for arg in args:
         if None in arg:
             del arg[None]
 
+
 def percentage(part, whole):
     return round(100 * part / whole)
+
 
 def update_statistic(user):
     Statistic.objects.update_or_create(
@@ -71,14 +82,16 @@ def update_statistic(user):
             'num_books': user.choice.books.count(),
             'num_movies': user.choice.movies.count(),
             'num_food': user.choice.food.count(),
-            'num_drinks': user.choice.drinks.count(), 
+            'num_drinks': user.choice.drinks.count(),
         }
     )
+
 
 # Checklists ----------------------------------------------------------------------------------
 
 def checklists(request):
     return render(request, 'checklists.html')
+
 
 # Statictic -----------------------------------------------------------------------------------
 
@@ -104,8 +117,8 @@ def favorite_items(user, model):
         nothing_to_show = 'mark watched movies to get stats'
         if fav_genres:
             return (
-                ', '.join(M_Genre.objects.get(id=k).genre for k in list(fav_genres.keys())[:3]), 
-                centuryFromYear(int(list(fav_years.keys())[0]))
+                ', '.join(M_Genre.objects.get(id=k).genre for k in list(fav_genres.keys())[:3]),
+                century_from_year(int(list(fav_years.keys())[0]))
                 )
         else:
             return (nothing_to_show, nothing_to_show)
@@ -124,15 +137,15 @@ def favorite_items(user, model):
         if fav_country:
             if len(fav_kinds) > 2 and len(fav_ingredients) > 2:
                 return (
-                    ', '.join(F_Kind.objects.get(id=k).food_kind for k in list(fav_kinds.keys())[:3]), 
+                    ', '.join(F_Kind.objects.get(id=k).food_kind for k in list(fav_kinds.keys())[:3]),
                     ', '.join(Ingredient.objects.get(id=k).ingredient for k in list(fav_ingredients.keys())[:3]),
-                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    country_converter.convert(list(fav_country.keys())[0], src='ISO2', to='name_short')
                     )
             else:
                 return (
-                    need_more_choices, 
                     need_more_choices,
-                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    need_more_choices,
+                    country_converter.convert(list(fav_country.keys())[0], src='ISO2', to='name_short')
                     )
         else:
             return (nothing_to_show, nothing_to_show, nothing_to_show)
@@ -151,20 +164,21 @@ def favorite_items(user, model):
         if fav_country:
             if len(fav_kinds) > 2 and len(fav_ingredients) > 2:
                 return (
-                    ', '.join(D_kind.objects.get(id=k).drink_kind for k in list(fav_kinds.keys())[:3]), 
-                    ', '.join(Ingredient.objects.get(id=k).ingredient for k in list(fav_ingredients.keys())[:3]), 
-                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    ', '.join(D_kind.objects.get(id=k).drink_kind for k in list(fav_kinds.keys())[:3]),
+                    ', '.join(Ingredient.objects.get(id=k).ingredient for k in list(fav_ingredients.keys())[:3]),
+                    country_converter.convert(list(fav_country.keys())[0], src='ISO2', to='name_short')
                     )
             else:
                 return (
-                    need_more_choices, 
-                    need_more_choices, 
-                    country_converter.convert(list(fav_country.keys())[0], src = 'ISO2', to = 'name_short')
+                    need_more_choices,
+                    need_more_choices,
+                    country_converter.convert(list(fav_country.keys())[0], src='ISO2', to='name_short')
                     )
         else:
             return (nothing_to_show, nothing_to_show, nothing_to_show)
     else:
         return 'the given category does not exist'
+
 
 def stats(request):
 
@@ -172,7 +186,7 @@ def stats(request):
 
     for i in users:
         update_statistic(i)
-    
+
     users_count = count_all_obj(User)
 
     user = request.user
@@ -213,7 +227,7 @@ def stats(request):
         fav_movie_items = favorite_items(user, Movie)
         fav_food_items = favorite_items(user, Food)
         fav_drink_items = favorite_items(user, Drink)
-    
+
         context = {
             'user_num_books': user_num_books,
             'user_num_movies': user_num_movies,
@@ -251,12 +265,14 @@ def stats(request):
 
     return render(request, 'statistic.html', context=context)
 
+
 # BOOKS ---------------------------------------------------------------------------------------
 
 def is_all_read(l_user):
     num_books = count_all_obj(Book)
     user_num_books = l_user.choice.books.all().count()
     return num_books == user_num_books
+
 
 def book_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -272,12 +288,14 @@ def book_checkbox(request):
     else:
         raise Http404
 
+
 def random_book(request):
     if request.is_ajax() and request.method == "GET":
         response = {'random-book-info': get_random_book(request)}
         return JsonResponse(response)
     else:
         raise Http404
+
 
 def get_random_book(request):
     user = request.user
@@ -289,12 +307,14 @@ def get_random_book(request):
     else:
         return 'Nice Done! You have marked everything!'
 
+
 # MOVIES --------------------------------------------------------------------------------------
 
 def is_all_watched(l_user):
     num_movies = count_all_obj(Movie)
     user_num_movies = l_user.choice.movies.all().count()
     return num_movies == user_num_movies
+
 
 def movie_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -310,12 +330,14 @@ def movie_checkbox(request):
     else:
         raise Http404
 
+
 def random_movie(request):
     if request.is_ajax() and request.method == "GET":
         response = {'random-movie-info': get_random_movie(request)}
         return JsonResponse(response)
     else:
         raise Http404
+
 
 def get_random_movie(request):
     user = request.user
@@ -326,6 +348,7 @@ def get_random_movie(request):
         return str(f'{r_movie.title} ({r_movie.year})')
     else:
         return 'Nice Done! You have marked everything!'
+
 
 # FOOD ----------------------------------------------------------------------------------------
 
@@ -349,12 +372,14 @@ def food_checkbox(request):
     else:
         raise Http404
 
+
 def random_dish(request):
     if request.is_ajax() and request.method == "GET":
         response = {'random-dish-info': get_random_dish(request)}
         return JsonResponse(response)
     else:
         raise Http404
+
 
 def get_random_dish(request):
     user = request.user
@@ -366,12 +391,14 @@ def get_random_dish(request):
     else:
         return 'Nice Done! You have marked everything!'
 
+
 # DRINKS --------------------------------------------------------------------------------------
 
 def is_all_drunk(l_user):
     num_drinks = count_all_obj(Drink)
     user_num_drinks = l_user.choice.drinks.all().count()
     return num_drinks == user_num_drinks
+
 
 def drink_checkbox(request):
     if request.is_ajax and request.method == "POST":
@@ -387,12 +414,14 @@ def drink_checkbox(request):
     else:
         raise Http404
 
+
 def random_drink(request):
     if request.is_ajax() and request.method == "GET":
         response = {'random-drink-info': get_random_drink(request)}
         return JsonResponse(response)
     else:
         raise Http404
+
 
 def get_random_drink(request):
     user = request.user
