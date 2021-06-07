@@ -34,10 +34,19 @@ class DrinkListView(generic.ListView):
 # GENERAL -------------------------------------------------------------------------------------
 
 def count_all_obj(model):
+    '''
+    The function counts all model objects.
+    It is created to make the code more concise.
+    '''
     return model.objects.all().count()
 
 
 def century_from_year(year):
+    '''
+    The function converts a numeric year value to latin Century value.
+    It is used for Books and Movies detail stats.
+    '''
+
     roman = OrderedDict()
 
     roman[1000] = 'M'
@@ -66,16 +75,28 @@ def century_from_year(year):
 
 
 def del_none(*args):
+    '''
+    The function removes none values from Counter dictionary.
+    '''
+
     for arg in args:
         if None in arg:
             del arg[None]
 
 
 def percentage(part, whole):
+    '''
+    The function returns a percentage value from 0 to 100.
+    '''
+
     return round(100 * part / whole)
 
 
 def update_statistic(user):
+    '''
+    The function updates the Statistic model with the latest
+    checklists counts for each user.
+    '''
     Statistic.objects.update_or_create(
         user_id=user,
         defaults={
@@ -96,6 +117,15 @@ def checklists(request):
 # Statictic -----------------------------------------------------------------------------------
 
 def favorite_items(user, model):
+    '''
+    The function returns a str/tuple with the most popular
+    characteristics of the predefined Checklist.
+    Book > Popular genres -> str
+    Movie > Popular genres, century -> tuple
+    Food > Popular kinds, ingredients, country -> tuple
+    Drink > Popular kinds, ingredients, country -> tuple
+    '''
+
     if model == Book:
         books_id = user.choice.books.values_list('id', flat=True).order_by('id')
         books = model.objects.filter(id__in=books_id)
@@ -269,12 +299,23 @@ def stats(request):
 # BOOKS ---------------------------------------------------------------------------------------
 
 def is_all_read(l_user):
+    '''
+    The function checks if all model objects are selected by
+    a specific user and returns an according boolean value.
+    '''
+
     num_books = count_all_obj(Book)
     user_num_books = l_user.choice.books.all().count()
     return num_books == user_num_books
 
 
 def book_checkbox(request):
+    '''
+    Is run once users tick a book,
+    changes 'is read' state to the opposite,
+    responses with a boolean value from is_all_read function.
+    '''
+
     if request.is_ajax and request.method == "POST":
         user = request.user
         book = Book.objects.get(id=request.POST['book_id'])
@@ -290,6 +331,11 @@ def book_checkbox(request):
 
 
 def random_book(request):
+    '''
+    Is run once users click on the Randomize button.
+    Responses with a random book from not read books for a specific user.
+    '''
+
     if request.is_ajax() and request.method == "GET":
         response = {'random-book-info': get_random_book(request)}
         return JsonResponse(response)
@@ -298,6 +344,10 @@ def random_book(request):
 
 
 def get_random_book(request):
+    '''
+    Returns a random book from not read books for a specific user.
+    '''
+
     user = request.user
     books_id = user.choice.books.values_list('id', flat=True).order_by('id')
     rand_books = Book.objects.exclude(id__in=books_id)
@@ -311,12 +361,23 @@ def get_random_book(request):
 # MOVIES --------------------------------------------------------------------------------------
 
 def is_all_watched(l_user):
+    '''
+    The function checks if all model objects are selected by
+    a specific user and returns an according boolean value.
+    '''
+
     num_movies = count_all_obj(Movie)
     user_num_movies = l_user.choice.movies.all().count()
     return num_movies == user_num_movies
 
 
 def movie_checkbox(request):
+    '''
+    Is run once users tick a movie,
+    changes 'is watched' state to the opposite,
+    responses with a boolean value from is_all_watched function.
+    '''
+
     if request.is_ajax and request.method == "POST":
         user = request.user
         movie = Movie.objects.get(id=request.POST['movie_id'])
@@ -332,6 +393,11 @@ def movie_checkbox(request):
 
 
 def random_movie(request):
+    '''
+    Is run once users click on the Randomize button.
+    Responses with a random movie from not watched movies for a specific user.
+    '''
+
     if request.is_ajax() and request.method == "GET":
         response = {'random-movie-info': get_random_movie(request)}
         return JsonResponse(response)
@@ -340,6 +406,10 @@ def random_movie(request):
 
 
 def get_random_movie(request):
+    '''
+    Returns a random movie from not watched movies for a specific user.
+    '''
+
     user = request.user
     movies_id = user.choice.movies.values_list('id', flat=True).order_by('id')
     rand_movies = Movie.objects.exclude(id__in=movies_id)
@@ -353,12 +423,23 @@ def get_random_movie(request):
 # FOOD ----------------------------------------------------------------------------------------
 
 def is_all_eaten(l_user):
+    '''
+    The function checks if all model objects are selected by
+    a specific user and returns an according boolean value.
+    '''
+
     num_dishes = count_all_obj(Food)
     user_num_dishes = l_user.choice.food.all().count()
     return num_dishes == user_num_dishes
 
 
 def food_checkbox(request):
+    '''
+    Is run once users tick a dish,
+    changes 'is eaten' state to the opposite,
+    responses with a boolean value from is_all_eaten function.
+    '''
+
     if request.is_ajax and request.method == "POST":
         user = request.user
         dish = Food.objects.get(id=request.POST['dish_id'])
@@ -374,6 +455,11 @@ def food_checkbox(request):
 
 
 def random_dish(request):
+    '''
+    Is run once users click on the Randomize button.
+    Responses with a random dish from not eaten dishes for a specific user.
+    '''
+
     if request.is_ajax() and request.method == "GET":
         response = {'random-dish-info': get_random_dish(request)}
         return JsonResponse(response)
@@ -382,6 +468,10 @@ def random_dish(request):
 
 
 def get_random_dish(request):
+    '''
+    Returns a random dish from not eaten dishes for a specific user.
+    '''
+
     user = request.user
     dishes_id = user.choice.food.values_list('id', flat=True).order_by('id')
     rand_dishes = Food.objects.exclude(id__in=dishes_id)
@@ -395,12 +485,23 @@ def get_random_dish(request):
 # DRINKS --------------------------------------------------------------------------------------
 
 def is_all_drunk(l_user):
+    '''
+    The function checks if all model objects are selected by
+    a specific user and returns an according boolean value.
+    '''
+
     num_drinks = count_all_obj(Drink)
     user_num_drinks = l_user.choice.drinks.all().count()
     return num_drinks == user_num_drinks
 
 
 def drink_checkbox(request):
+    '''
+    Is run once users tick a drink,
+    changes 'is drunk' state to the opposite,
+    responses with a boolean value from is_all_drunk function.
+    '''
+
     if request.is_ajax and request.method == "POST":
         user = request.user
         drink = Drink.objects.get(id=request.POST['drink_id'])
@@ -416,6 +517,11 @@ def drink_checkbox(request):
 
 
 def random_drink(request):
+    '''
+    Is run once users click on the Randomize button.
+    Responses with a random drink from not tried drinks for a specific user.
+    '''
+
     if request.is_ajax() and request.method == "GET":
         response = {'random-drink-info': get_random_drink(request)}
         return JsonResponse(response)
@@ -424,6 +530,10 @@ def random_drink(request):
 
 
 def get_random_drink(request):
+    '''
+    Returns a random drink from not tried drinks for a specific user.
+    '''
+
     user = request.user
     drinks_id = user.choice.drinks.values_list('id', flat=True).order_by('id')
     rand_drinks = Drink.objects.exclude(id__in=drinks_id)
